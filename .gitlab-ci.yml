@@ -1,0 +1,8 @@
+build:
+  stage: build
+  script: gradle build
+
+test:
+  stage: test
+  script: gradle check
+
