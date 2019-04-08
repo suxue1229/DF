@@ -273,14 +273,19 @@ public class MBrane {
 		firstJp = true;
 		double Jp = parJp();
 		while (true) {
+			double Jpn=0;
 			if (Jp > 0) {
-				double Jpn = parJp();
+				 Jpn=parJp();
 				MLogger.memlog(String.format("Jp %f -> %f, %f%%", Jp, Jpn, 100 * Math.abs((Jpn - Jp) / Jp)));
 				if (Jpn == Double.POSITIVE_INFINITY || Jpn == Double.NaN) {
 					throw new ArithmeticException("元件水通量计算错误");
 				}
-				Jp = Jpn;
-				count++;
+				if(Jpn>0){
+					Jp = Jpn;
+					count++;
+				}else{
+					Jp=0;
+				}
 			} else {
 				Jp = 0;
 				break;
