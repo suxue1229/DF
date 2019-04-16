@@ -153,7 +153,7 @@ public class MSystem {
                 break;
             }
             MLogger.syslog(String.format("{ASSERT} Q:%f != %f", this.streamp.parQ, pariQp));
-            if (new Date().getTime() - start > 5000) {
+            if (new Date().getTime() - start > 10000) {
                 throw new TimeoutException("系统模型计算超时");
             }
             //endregion
