@@ -116,7 +116,7 @@ public class MBrane {
 
 	// 离子透过率
 	private double parTrj(EIon ion) {
-		return 1 / (2 * (1 - ipass.get(ion).Pj) / (ipass.get(ion).Pj + 2 * ipass.get(ion).Ds / parJp) + 1);
+		return 1.0 / (2 * (1 - ipass.get(ion).Pj) / (ipass.get(ion).Pj + 2 * ipass.get(ion).Ds / (int) parJp) + 1);
 	}
 
 	// 离子截留率

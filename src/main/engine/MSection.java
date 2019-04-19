@@ -44,9 +44,6 @@ public class MSection {
 
 	private List<MBrane> branes = new ArrayList<>();
 
-	public MSection() {
-	}
-
 	public void calculate(double mfH2CO3) throws Exception {
 		double a = 0.0, b = 0.0, c = 0.0;
 		this.streamf.parP += this.parDpi - this.parPLi;

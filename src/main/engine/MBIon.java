@@ -12,10 +12,6 @@ public class MBIon {
 	// 硫酸根修正系数
 	public double qj = 0;
 
-	public MBIon() {
-
-	}
-
 	public MBIon(double Pj, double Ds, double kb, double bb, double qj) {
 		this.Pj = Pj;
 		this.Ds = Ds;
