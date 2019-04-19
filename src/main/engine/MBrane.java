@@ -2,7 +2,6 @@ package engine;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.concurrent.TimeoutException;
 
 public class MBrane {
 	// region basic features
@@ -50,6 +49,8 @@ public class MBrane {
 	// 产水背压 MPa
 	public double parPpi;
 	// endregion
+
+	private boolean firstcalc = false;
 
 	Dictionary<EIon, MBIon> ipass = new Hashtable<>();
 
@@ -138,9 +139,14 @@ public class MBrane {
 	}
 
 	// 浓差极化系数
+	// b_j=k_(j,b)×(273.15+T)+b_(j,b)
+	private double bj(EIon ion) {
+		return ipass.get(ion).kb * (273.15 + streamf.parT()) + ipass.get(ion).bb;
+	}
+
 	private double parBj(EIon ion) {
-		return Math.exp(ipass.get(ion).bj * parJp / parut())
-				/ (parRjd(ion) + (1 - parRjd(ion)) * Math.exp(ipass.get(ion).bj * parJp / parut()));
+		return Math.exp(bj(ion) * parJp / parut())
+				/ (parRjd(ion) + (1 - parRjd(ion)) * Math.exp(bj(ion) * parJp / parut()));
 	}
 
 	// COD透过系数
@@ -175,23 +181,26 @@ public class MBrane {
 			this.parx0u = 0.1245;
 			this.parSE = 34;
 			this.parAE = 0.0174;
-			ipass.put(EIon.K, new MBIon(0.6244, 25.7754, 0, 1.1609));
-			ipass.put(EIon.Na, new MBIon(0.5412, 34.1303, 0, 1.1609));
-			ipass.put(EIon.NH4, new MBIon(0.6247, 7.8787, 0, 1.1609));
-			ipass.put(EIon.Ca, new MBIon(0.6519, 2.7940, 0, 1.4391));
-			ipass.put(EIon.Mg, new MBIon(0.6321, 2.4276, 0, 1.4391));
-			ipass.put(EIon.Ba, new MBIon(0.6520, 2.7940, 0, 1.4391));
-			ipass.put(EIon.Sr, new MBIon(0.6519, 2.7940, 0, 1.4391));
-			ipass.put(EIon.Fe2, new MBIon(0.66, 2.4, 0, 0));
-			ipass.put(EIon.Mn, new MBIon(0.65, 2.02, 0, 0));
-			ipass.put(EIon.Fe3, new MBIon(0.03, 0.6, 0, 0));
-			ipass.put(EIon.Al, new MBIon(0.04, 0.65, 0, 0));
-			ipass.put(EIon.NO3, new MBIon(1.0507, 1.5927, 0, -1.0789));
-			ipass.put(EIon.F, new MBIon(0.3965, 23.8206, 0, 0));
-			ipass.put(EIon.Cl, new MBIon(1.0039, 9.7, 0, -0.5));
-			ipass.put(EIon.HCO3, new MBIon(0.5273, 20.3184, 0, 0.065));
-			ipass.put(EIon.SO4, new MBIon(0.0415, 0.6144, 0, 0));
-			ipass.put(EIon.PO4, new MBIon(0.0366, 0.5227, 0, -0.1107));
+			ipass.put(EIon.K, new MBIon(0.6244, 25.7754, 0, 0, 1.1609));
+			ipass.put(EIon.Na, new MBIon(0.5412, 34.1303, 0, 0, 1.1609));
+			ipass.put(EIon.NH4, new MBIon(0.6247, 7.8787, 0, 0, 1.1609));
+			ipass.put(EIon.Ca, new MBIon(0.6519, 2.7940, 0, 0, 1.4391));
+			ipass.put(EIon.Mg, new MBIon(0.6321, 2.4276, 0, 0, 1.4391));
+			ipass.put(EIon.Ba, new MBIon(0.6520, 2.7940, 0, 0, 1.4391));
+			ipass.put(EIon.Sr, new MBIon(0.6519, 2.7940, 0, 0, 1.4391));
+			ipass.put(EIon.Fe2, new MBIon(0.66, 2.4, 0, 0, 0));
+			ipass.put(EIon.Mn, new MBIon(0.65, 2.02, 0, 0, 0));
+			ipass.put(EIon.Fe3, new MBIon(0.03, 0.6, 0, 0, 0));
+			ipass.put(EIon.Al, new MBIon(0.04, 0.65, 0, 0, 0));
+			ipass.put(EIon.NO3, new MBIon(1.0507, 1.5927, 0, 0, -1.0789));
+			ipass.put(EIon.F, new MBIon(0.3965, 23.8206, 0, 0, 0));
+			ipass.put(EIon.Cl, new MBIon(1.0039, 9.7, 0, 0, -0.5));
+			ipass.put(EIon.HCO3, new MBIon(0.5273, 20.3184, 0, 0, 0.065));
+			ipass.put(EIon.SO4, new MBIon(0.0415, 0.6144, 0, 0, 0));
+			ipass.put(EIon.P, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.PO4, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.HPO4, new MBIon(0.0366, 0.5227, 0, 0, -0.1107));
+			ipass.put(EIon.H2PO4, new MBIon(0.0366, 0.5227, 0, 0, -0.1107));
 			this.damCOD = 0.7;
 			this.damMin = 0.05;
 			this.damCoe = 1.401;
@@ -208,61 +217,67 @@ public class MBrane {
 			this.parx0u = 0.1245;
 			this.parSE = 37;
 			this.parAE = 0.0159;
-			ipass.put(EIon.K, new MBIon(0.6244, 25.7754, 0, 1.1609));
-			ipass.put(EIon.Na, new MBIon(0.5412, 34.1303, 0, 1.1609));
-			ipass.put(EIon.NH4, new MBIon(0.6247, 7.8787, 0, 1.1609));
-			ipass.put(EIon.Ca, new MBIon(0.6519, 2.7940, 0, 1.4391));
-			ipass.put(EIon.Mg, new MBIon(0.6321, 2.4276, 0, 1.4391));
-			ipass.put(EIon.Ba, new MBIon(0.6520, 2.7940, 0, 1.4391));
-			ipass.put(EIon.Sr, new MBIon(0.6519, 2.7940, 0, 1.4391));
-			ipass.put(EIon.Fe2, new MBIon(0.66, 2.4, 0, 0));
-			ipass.put(EIon.Mn, new MBIon(0.65, 2.02, 0, 0));
-			ipass.put(EIon.Fe3, new MBIon(0.03, 0.6, 0, 0));
-			ipass.put(EIon.Al, new MBIon(0.04, 0.65, 0, 0));
-			ipass.put(EIon.NO3, new MBIon(1.0507, 1.5927, 0, -1.0789));
-			ipass.put(EIon.F, new MBIon(0.3965, 23.8206, 0, 0));
-			ipass.put(EIon.Cl, new MBIon(1.0039, 9.7, 0, -0.5));
-			ipass.put(EIon.HCO3, new MBIon(0.5273, 20.3184, 0, 0.065));
-			ipass.put(EIon.SO4, new MBIon(0.0415, 0.6144, 0, 0));
-			ipass.put(EIon.PO4, new MBIon(0.0366, 0.5227, 0, -0.1107));
+			ipass.put(EIon.K, new MBIon(0.6244, 25.7754, 0, 0, 1.1609));
+			ipass.put(EIon.Na, new MBIon(0.5412, 34.1303, 0, 0, 1.1609));
+			ipass.put(EIon.NH4, new MBIon(0.6247, 7.8787, 0, 0, 1.1609));
+			ipass.put(EIon.Ca, new MBIon(0.6519, 2.7940, 0, 0, 1.4391));
+			ipass.put(EIon.Mg, new MBIon(0.6321, 2.4276, 0, 0, 1.4391));
+			ipass.put(EIon.Ba, new MBIon(0.6520, 2.7940, 0, 0, 1.4391));
+			ipass.put(EIon.Sr, new MBIon(0.6519, 2.7940, 0, 0, 1.4391));
+			ipass.put(EIon.Fe2, new MBIon(0.66, 2.4, 0, 0, 0));
+			ipass.put(EIon.Mn, new MBIon(0.65, 2.02, 0, 0, 0));
+			ipass.put(EIon.Fe3, new MBIon(0.03, 0.6, 0, 0, 0));
+			ipass.put(EIon.Al, new MBIon(0.04, 0.65, 0, 0, 0));
+			ipass.put(EIon.NO3, new MBIon(1.0507, 1.5927, 0, 0, -1.0789));
+			ipass.put(EIon.F, new MBIon(0.3965, 23.8206, 0, 0, 0));
+			ipass.put(EIon.Cl, new MBIon(1.0039, 9.7, 0, 0, -0.5));
+			ipass.put(EIon.HCO3, new MBIon(0.5273, 20.3184, 0, 0, 0.065));
+			ipass.put(EIon.SO4, new MBIon(0.0415, 0.6144, 0, 0, 0));
+			ipass.put(EIon.P, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.PO4, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.HPO4, new MBIon(0.0366, 0.5227, 0, 0, -0.1107));
+			ipass.put(EIon.H2PO4, new MBIon(0.0366, 0.5227, 0, 0, -0.1107));
 			this.damCOD = 0.7;
 			this.damMin = 0.05;
 			this.damCoe = 1.401;
 			this.damDiv = 110.44;
 			this.damMax = 0.95;
-		} else if (name.equals("DF301-8040(400)")) {
+		} else if (name.equals("DF304I-8040(400)")) {
 			this.width = 8;
 			this.length = 40;
-			this.area = 37;
-			this.parA = 85.7;
-			this.parw = 0.03456;
-			this.park = 0.4772;
-			this.park0 = 5.0093;
-			this.parx0u = 0.2325;
-			this.parSE = 37;
-			this.parAE = 0.0164;
-			ipass.put(EIon.K, new MBIon(0.8554, 3.9042, 0, 1.4708));
-			ipass.put(EIon.Na, new MBIon(0.8410, 4.8186, 0, 1.4708));
-			ipass.put(EIon.NH4, new MBIon(0.8309, 5.8536, 0, 1.4708));
-			ipass.put(EIon.Ca, new MBIon(0.6268, 4.0734, 1547.1, 1.7789));
-			ipass.put(EIon.Mg, new MBIon(0.6425, 3.8844, 1547.1, 1.7789));
-			ipass.put(EIon.Ba, new MBIon(0.7544, 2.2086, 1547.1, 1.7789));
-			ipass.put(EIon.Sr, new MBIon(0.6425, 3.2922, 1547.1, 1.7789));
-			ipass.put(EIon.Fe2, new MBIon(0.63, 4, 1547.1, 0));
-			ipass.put(EIon.Mn, new MBIon(0.62, 3.8, 1547.1, 0));
-			ipass.put(EIon.Fe3, new MBIon(0.07, 1.5, 1547.1, 0));
-			ipass.put(EIon.Al, new MBIon(0.05, 2, 1547.1, 0));
-			ipass.put(EIon.NO3, new MBIon(1.0683, 2.3446, 0, -1.3934));
-			ipass.put(EIon.F, new MBIon(0.9, 2, 0, 0));
-			ipass.put(EIon.Cl, new MBIon(1.0659, 2.1798, 0, -1.2));
-			ipass.put(EIon.HCO3, new MBIon(0.9662, 2.0340, 0, -1.0221));
-			ipass.put(EIon.SO4, new MBIon(0.0242, 1.0780, 3606.7, 0));
-			ipass.put(EIon.PO4, new MBIon(0.0549, 2.0916, 3606.7, 0.4300));
-			this.damCOD = 0.6;
+			this.area = 37.6;
+			this.parA = 111.16;
+			this.parw = 0.03280;
+			this.park = 0.3529;
+			this.park0 = 3.3757;
+			this.parx0u = 0.1339;
+			this.parSE = 37.6;
+			this.parAE = 0.0172;
+			ipass.put(EIon.K, new MBIon(0.7510, 6.1899, -28.5, 9788.5, 1.1646));
+			ipass.put(EIon.Na, new MBIon(0.7355, 7.0374, -139.0, 43674.6, 1.2181));
+			ipass.put(EIon.NH4, new MBIon(0.7173, 2.5167, 0, 0, 0.7647));
+			ipass.put(EIon.Ca, new MBIon(0.4607, 5.0781, 0, 1891.3, 1.3815));
+			ipass.put(EIon.Mg, new MBIon(0.2911, 5.2535, 0, 667.1, 0.9228));
+			ipass.put(EIon.Ba, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Sr, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Fe2, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Mn, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Fe3, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Al, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.NO3, new MBIon(1.0229, 4.5631, 0, 0, -1.4001));
+			ipass.put(EIon.F, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Cl, new MBIon(0.9991, 1.4891, 0, 3765.9, -1.1274));
+			ipass.put(EIon.HCO3, new MBIon(0.2018, 13.9941, -130.5, 40784.2, -0.2625));
+			ipass.put(EIon.SO4, new MBIon(0.0045, 0.0039, 0, 2897.2, 0));
+			ipass.put(EIon.P, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.PO4, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.HPO4, new MBIon(0.0060, 0, 0, 6676.6, 0));
+			ipass.put(EIon.H2PO4, new MBIon(0.0948, 0.4796, 0, 812.5, 0));
+			this.damCOD = 0.7;
 			this.damMin = 0.05;
-			this.damCoe = 1.3;
-			this.damDiv = 160;
-			this.damMax = 0.9;
+			this.damCoe = 1.401;
+			this.damDiv = 110.44;
+			this.damMax = 0.95;
 		} else {
 			throw new Exception("unsupported membrane model");
 		}
@@ -273,18 +288,18 @@ public class MBrane {
 		firstJp = true;
 		double Jp = parJp();
 		while (true) {
-			double Jpn=0;
+			double Jpn = 0;
 			if (Jp > 0) {
-				 Jpn=parJp();
+				Jpn = parJp();
 				MLogger.memlog(String.format("Jp %f -> %f, %f%%", Jp, Jpn, 100 * Math.abs((Jpn - Jp) / Jp)));
 				if (Jpn == Double.POSITIVE_INFINITY || Jpn == Double.NaN) {
 					throw new ArithmeticException("元件水通量计算错误");
 				}
-				if(Jpn>0){
+				if (Jpn > 0) {
 					Jp = Jpn;
 					count++;
-				}else{
-					Jp=0;
+				} else {
+					Jp = 0;
 				}
 			} else {
 				Jp = 0;
@@ -294,7 +309,7 @@ public class MBrane {
 				break;
 			}
 		}
-
+		parJp = Jp;
 		streamp = streamf.copy();
 		streamp.parQ = parJp * parSE / 1000;
 		streamc = streamf.copy();
@@ -311,5 +326,8 @@ public class MBrane {
 		streamp.parP = parPpi;
 		streamc.parP = streamf.parP - parDPfc();
 		streamc.updpH(mfH2CO3);
+		this.streamp.ion(EIon.PO4).ioncp_p = this.streamp.ion(EIon.PO4).parcj() * this.streamp.parQ;
+		this.streamp.ion(EIon.HPO4).ioncp_p = this.streamp.ion(EIon.HPO4).parcj() * this.streamp.parQ;
+		this.streamp.ion(EIon.H2PO4).ioncp_p = this.streamp.ion(EIon.H2PO4).parcj() * this.streamp.parQ;
 	}
 }

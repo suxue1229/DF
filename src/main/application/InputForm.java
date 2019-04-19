@@ -70,31 +70,11 @@ public class InputForm extends JFrame {
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	java.text.DecimalFormat df2 = new java.text.DecimalFormat("0.00");
 	MSystem msystem;
-	private JTextField textFieldDate;
-	private JTextField TextField_CaCO3;
-	private JTextField TextField_BaSO4;
-	private JTextField TextField_CaSO4;
-	private JTextField TextField_CaF2;
-	private JTextField TextField_Ca3;
-	private JTextField TextField_SrSO4;
-	private JTextField textFieldCOD;
-	private JTextField textFieldOrganismM1;
-	private JTextField textFieldOrganismC1;
-	private JTextField textFieldOrganismM2;
-	private JTextField textFieldOrganismC2;
-	private JTextField textFieldsection;
-	private JTextField TextFieldpariJ;
-	private JTextField TextFieldpariYD;
-	private JTextField textFieldpariY;
-	private JTextField textFieldparEi;
-	private JTextField textFieldparPpi;
-	private JTextField textFieldparNVi;
-	private JTextField textFieldparDpi;
-	private JTextField textFieldparPLi;
-	private JTextField TextFieldpariQf;
-	private JTextField textFieldpariQp;
-	private JTextField textFieldpariQr;
-	private JTextField TextFieldpariQc;
+	private JTextField textFieldDate, TextField_CaCO3, TextField_BaSO4, TextField_CaSO4, TextField_CaF2, TextField_Ca3,
+			TextField_SrSO4, textFieldCOD, textFieldOrganismM1, textFieldOrganismC1, textFieldOrganismM2,
+			textFieldOrganismC2, textFieldsection, TextFieldpariJ, TextFieldpariYD, textFieldpariY, textFieldparEi,
+			textFieldparPpi, textFieldparNVi, textFieldparDpi, textFieldparPLi, TextFieldpariQf, textFieldpariQp,
+			textFieldpariQr, TextFieldpariQc;
 	private JLabel lblMpa_MPa2, lblMpa_2, lblMpa_MPa0;
 	private JPanel panelIon;
 	private JRadioButton jrbCOD;
@@ -728,7 +708,7 @@ public class InputForm extends JFrame {
 		gbc_TextField_SrSO4.gridy = 6;
 		panelIon.add(TextField_SrSO4, gbc_TextField_SrSO4);
 
-		TextField_Ca3 = new JTextField(String.format("%.2f", msystem.streams.parSCa3PO42() * 100));
+		TextField_Ca3 = new JTextField(String.format("%.2f", msystem.streams.parSCa3PO42(msystem.temp) * 100));
 		TextField_Ca3.setEnabled(false);
 		GridBagConstraints gbc_TextField_Ca3 = new GridBagConstraints();
 		gbc_TextField_Ca3.fill = GridBagConstraints.HORIZONTAL;
@@ -747,7 +727,7 @@ public class InputForm extends JFrame {
 		panelIon.add(TextField_CaF2, gbc_TextField_CaF2);
 
 		String[] cation = { "K+", "Na+", "NH4", "Ca2+", "Mg2+", "Ba2+", "Sr2+", "Fe2+", "Mn2+", "Fe3+", "Al3+", "总计" };
-		String[] anion = { "NO3-", "F-", "Cl-", "HCO3-", "(SO4)2-", "PO4", "", "", "", "", "", "总计" };
+		String[] anion = { "NO3-", "F-", "Cl-", "HCO3-", "(SO4)2-", "总磷P", "", "", "", "", "", "总计" };
 		for (int i = 0; i < tableIon.getRowCount(); i++) {
 			tablemodel.setValueAt(cation[i], i, 0);
 			tablemodel.setValueAt(anion[i], i, 4);
@@ -757,11 +737,15 @@ public class InputForm extends JFrame {
 		tableIon.setCellSelectionEnabled(true);// 使得表格的选取以cell为单位而不是以列为单位
 		tableIon.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent m) {
 				int row = tableIon.getSelectedRow();
 				int col = tableIon.getSelectedColumn();
 
-				if (row < 11 && col < 4 || row < 6 && col > 4) {
+				if (row < 11 && col < 4 && col > 0 || row < 6 && col > 4) {
+					if (m.getClickCount() == 2) {
+						tableIon.setValueAt("", row, col);
+					}
+
 					tableIon.getCellEditor(row, col).addCellEditorListener(new CellEditorListener() {
 						@Override
 						public void editingStopped(ChangeEvent e) {
@@ -773,6 +757,7 @@ public class InputForm extends JFrame {
 											JOptionPane.ERROR_MESSAGE);
 									tableIon.setValueAt(df2.format(0), tableIon.getSelectedRow(),
 											tableIon.getSelectedColumn());
+
 								}
 							} catch (Exception e2) {
 								tableIon.setValueAt(df2.format(0), tableIon.getSelectedRow(),
@@ -859,6 +844,7 @@ public class InputForm extends JFrame {
 												.ion(EIon.values()[11 + tableIon.getSelectedRow()]).parmj() * 1000),
 										tableIon.getSelectedRow(), 6);
 							}
+							msystem.temp = msystem.streams.ion(EIon.P).parmj();
 							tableIon.setValueAt(df2.format(msystem.streams.parqC()), 11, 3);
 							tableIon.setValueAt(df2.format(msystem.streams.parqA()), 11, 7);
 							// 饱和度实时显示 >100 红色背景
@@ -866,7 +852,8 @@ public class InputForm extends JFrame {
 							TextField_BaSO4.setText(String.format("%.2f", msystem.streams.parSBaSO4() * 100));
 							TextField_CaSO4.setText(String.format("%.2f", msystem.streams.parSCaSO4() * 100));
 							TextField_SrSO4.setText(String.format("%.2f", msystem.streams.parSSrSO4() * 100));
-							TextField_Ca3.setText(String.format("%.2f", msystem.streams.parSCa3PO42() * 100));
+							TextField_Ca3
+									.setText(String.format("%.2f", msystem.streams.parSCa3PO42(msystem.temp) * 100));
 							TextField_CaF2.setText(String.format("%.2f", msystem.streams.parSCaF2() * 100));
 							if (Double.parseDouble(TextField_BaSO4.getText().toString()) > 100) {
 								TextField_BaSO4.setBackground(new Color(176, 23, 31));
@@ -1877,10 +1864,10 @@ public class InputForm extends JFrame {
 		textFieldparEi = new JTextField(String.format("%d", msystem.sections()[0].parEi));
 		JComboBox<String> modelcomboBox = new JComboBox<>();
 		modelcomboBox.setPreferredSize(new Dimension(150, 30));
-		modelcomboBox.addItem("DF301-8040(400)");
+		modelcomboBox.addItem("DF304I-8040(400)");
 		modelcomboBox.addItem("DF30-8040(365)");
 		modelcomboBox.addItem("DF30-8040(400)");
-		modelcomboBox.setToolTipText("DF301-8040(400)  尺寸：8x40   膜面积：37m2");
+		modelcomboBox.setToolTipText("DF304I-8040(400)  尺寸：8x40   膜面积：37.6m2");
 
 		JLabel labelmodel = new JLabel("膜元件型号");
 		GridBagConstraints gbc_label322 = new GridBagConstraints();
@@ -2141,10 +2128,11 @@ public class InputForm extends JFrame {
 		modelcomboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(final ItemEvent e) {
 				int index = modelcomboBox.getSelectedIndex();
-				modelcomboBox.setToolTipText("DF301-8040(400)  尺寸：8x40   膜面积：37m2");
-				msystem.sections()[tablesystem.getSelectedColumn() - 1].model = modelcomboBox.getSelectedItem()
-						.toString();
-				if (index == 1) {
+				if (index == 0) {
+					modelcomboBox.setToolTipText("DF304I-8040(400)  尺寸：8x40   膜面积：37.6m2");
+					tablesystem.setValueAt(msystem.sections()[tablesystem.getSelectedColumn() - 1].model, 1,
+							tablesystem.getSelectedColumn());
+				} else if (index == 1) {
 					modelcomboBox.setToolTipText("DF30-8040(365)   尺寸：8x40   膜面积：34m2");
 					tablesystem.setValueAt(msystem.sections()[tablesystem.getSelectedColumn() - 1].model, 1,
 							tablesystem.getSelectedColumn());
@@ -2153,7 +2141,8 @@ public class InputForm extends JFrame {
 					tablesystem.setValueAt(msystem.sections()[tablesystem.getSelectedColumn() - 1].model, 1,
 							tablesystem.getSelectedColumn());
 				}
-
+				msystem.sections()[tablesystem.getSelectedColumn() - 1].model = modelcomboBox.getSelectedItem()
+						.toString();
 			}
 		});
 		textFieldparEi.addFocusListener(new FocusAdapter() {
@@ -2341,7 +2330,7 @@ public class InputForm extends JFrame {
 
 		String[] systemList = { "水量设计基础", "系统设计参数" };
 		JPanel systempanel = new JPanel();
-		JList<String> systemlist = new JList<>(systemList);
+		JList<String> systemlist = new JList<String>(systemList);
 		systemlist.setFixedCellWidth(125);
 		systemlist.setSelectedIndex(0);
 		JSplitPane systemjsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, systemlist, systempanel);
@@ -2409,7 +2398,7 @@ public class InputForm extends JFrame {
 			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i, 2);
 			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parzj()), i, 3);
 		}
-		for (int i = 11; i < EIon.values().length; i++) {
+		for (int i = 11; i < EIon.values().length - 3; i++) {
 			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parcj()), i - 11, 5);
 			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i - 11, 6);
 			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parzj()), i - 11, 7);

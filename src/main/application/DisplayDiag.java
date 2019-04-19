@@ -138,8 +138,7 @@ public class DisplayDiag extends JFrame {
 		panel.setLayout(gl_panel);
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("水质报告输出", null, panel_1, null);
-		tablewaterout = new JTable(EIon.values().length + 3 + msystem.streams.cods().length,
-				2 * msystem.section() + 2) {
+		tablewaterout = new JTable(EIon.values().length + msystem.streams.cods().length, 2 * msystem.section() + 2) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
@@ -151,7 +150,7 @@ public class DisplayDiag extends JFrame {
 			tablemodel.setValueAt((n2 + 1) + "段 浓水(mg/L)", 0, 2 * n2 + 2);
 		}
 		tablemodel.setValueAt("总产水(mg/L)", 0, tablewaterout.getColumnCount() - 1);
-		for (int m = 0; m < EIon.values().length; m++) {
+		for (int m = 0; m < EIon.values().length - 4; m++) {
 			tablemodel.setValueAt(msystem.sections()[0].streamp.ion(EIon.values()[m]).name, m + 1, 0);
 			for (int n = 0; n < msystem.section(); n++) {
 				tablemodel.setValueAt(df2.format(msystem.sections()[n].streamp.ion(EIon.values()[m]).parcj()), m + 1,
@@ -162,28 +161,36 @@ public class DisplayDiag extends JFrame {
 			tablemodel.setValueAt(df2.format(msystem.streamp.ion(EIon.values()[m]).parcj()), m + 1,
 					2 * msystem.section() + 1);
 		}
-		tablemodel.setValueAt("TDS", EIon.values().length + 1, 0);
-		tablemodel.setValueAt("pH", EIon.values().length + 2, 0);
+		tablemodel.setValueAt("磷酸盐(以P计)", EIon.values().length - 3, 0);
+		tablemodel.setValueAt("TDS", EIon.values().length - 2, 0);
+		tablemodel.setValueAt("pH", EIon.values().length - 1, 0);
 		for (int t = 0; t < msystem.section(); t++) {
-			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamp.tds()), EIon.values().length + 1, 2 * t + 1);
-			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamc.tds()), EIon.values().length + 1, 2 * t + 2);
-
-			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamp.parpH()), EIon.values().length + 2,
+			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamp.ion(EIon.P).cp_p), EIon.values().length - 3,
 					2 * t + 1);
-			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamc.parpH()), EIon.values().length + 2,
+			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamc.ion(EIon.P).cc_p), EIon.values().length - 3,
+					2 * t + 2);
+
+			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamp.tds()), EIon.values().length - 2, 2 * t + 1);
+			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamc.tds()), EIon.values().length - 2, 2 * t + 2);
+
+			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamp.parpH()), EIon.values().length - 1,
+					2 * t + 1);
+			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamc.parpH()), EIon.values().length - 1,
 					2 * t + 2);
 			for (int j = 0; j < msystem.streams.cods().length; j++) {
-				tablemodel.setValueAt(msystem.sections()[t].streamp.cods()[j].name, EIon.values().length + 3 + j, 0);
+				tablemodel.setValueAt(msystem.sections()[t].streamp.cods()[j].name, EIon.values().length + j, 0);
 				tablemodel.setValueAt(df2.format(msystem.sections()[t].streamp.cods()[j].parcj),
-						EIon.values().length + 3 + j, 2 * t + 1);
+						EIon.values().length + j, 2 * t + 1);
 				tablemodel.setValueAt(df2.format(msystem.sections()[t].streamc.cods()[j].parcj),
-						EIon.values().length + 3 + j, 2 * t + 2);
-				tablemodel.setValueAt(df2.format(msystem.streamp.cods()[j].parcj), EIon.values().length + 3 + j,
+						EIon.values().length + j, 2 * t + 2);
+				tablemodel.setValueAt(df2.format(msystem.streamp.cods()[j].parcj), EIon.values().length + j,
 						2 * msystem.section() + 1);
 			}
 		}
-		tablemodel.setValueAt(df2.format(msystem.streamp.tds()), EIon.values().length + 1, 2 * msystem.section() + 1);
-		tablemodel.setValueAt(df2.format(msystem.streamp.parpH()), EIon.values().length + 2, 2 * msystem.section() + 1);
+		tablemodel.setValueAt(df2.format(msystem.streamp.ion(EIon.P).cp_p), EIon.values().length - 3,
+				2 * msystem.section() + 1);
+		tablemodel.setValueAt(df2.format(msystem.streamp.tds()), EIon.values().length - 2, 2 * msystem.section() + 1);
+		tablemodel.setValueAt(df2.format(msystem.streamp.parpH()), EIon.values().length - 1, 2 * msystem.section() + 1);
 		for (int i = 0; i < tablewaterout.getColumnCount(); i++) {
 			tablewaterout.getColumnModel().getColumn(i).setPreferredWidth(102);
 		}
@@ -298,8 +305,8 @@ public class DisplayDiag extends JFrame {
 				tablemodel_3.setValueAt(df2.format(msystem.sections()[i].branes()[j].streamc.parSCaSO4() * 100) + " %",
 						ct + j + 1, 2);
 				tablemodel_3.setValueAt(
-						df2.format(msystem.sections()[i].branes()[j].streamc.parSCa3PO42() * 100) + " %", ct + j + 1,
-						3);
+						df2.format(msystem.sections()[i].branes()[j].streamc.parSCa3PO42(msystem.temp) * 100) + " %",
+						ct + j + 1, 3);
 				tablemodel_3.setValueAt(df2.format(msystem.sections()[i].branes()[j].streamc.parSBaSO4() * 100) + " %",
 						ct + j + 1, 4);
 				tablemodel_3.setValueAt(df2.format(msystem.sections()[i].branes()[j].streamc.parSSrSO4() * 100) + " %",
@@ -314,7 +321,7 @@ public class DisplayDiag extends JFrame {
 					rows2.add(ct + j + 1);
 					cols2.add(2);
 				}
-				if (msystem.sections()[i].branes()[j].streamc.parSCa3PO42() > 1) {
+				if (msystem.sections()[i].branes()[j].streamc.parSCa3PO42(msystem.temp) > 1) {
 					rows2.add(ct + j + 1);
 					cols2.add(3);
 				}
