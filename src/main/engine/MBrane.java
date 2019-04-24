@@ -50,8 +50,6 @@ public class MBrane {
 	public double parPpi;
 	// endregion
 
-	private boolean firstcalc = false;
-
 	Dictionary<EIon, MBIon> ipass = new Hashtable<>();
 
 	// region constant calculation
@@ -116,7 +114,12 @@ public class MBrane {
 
 	// 离子透过率
 	private double parTrj(EIon ion) {
-		return 1.0 / (2 * (1 - ipass.get(ion).Pj) / (ipass.get(ion).Pj + 2 * ipass.get(ion).Ds / (int) parJp) + 1);
+		double temp = 1.0 / (2 * (1 - ipass.get(ion).Pj) / (ipass.get(ion).Pj + 2 * ipass.get(ion).Ds / (int) parJp) + 1);
+		if (Double.isInfinite(temp) || Double.isNaN(temp)) {
+			throw new ArithmeticException("离子透过率计算错误");
+		} else {
+			return 1.0 / (2 * (1 - ipass.get(ion).Pj) / (ipass.get(ion).Pj + 2 * ipass.get(ion).Ds / (int) parJp) + 1);
+		}
 	}
 
 	// 离子截留率
@@ -258,19 +261,19 @@ public class MBrane {
 			ipass.put(EIon.NH4, new MBIon(0.7173, 2.5167, 0, 0, 0.7647));
 			ipass.put(EIon.Ca, new MBIon(0.4607, 5.0781, 0, 1891.3, 1.3815));
 			ipass.put(EIon.Mg, new MBIon(0.2911, 5.2535, 0, 667.1, 0.9228));
-			ipass.put(EIon.Ba, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Ba,new MBIon(0, 0, 0, 0, 0));
 			ipass.put(EIon.Sr, new MBIon(0, 0, 0, 0, 0));
-			ipass.put(EIon.Fe2, new MBIon(0, 0, 0, 0, 0));
-			ipass.put(EIon.Mn, new MBIon(0, 0, 0, 0, 0));
-			ipass.put(EIon.Fe3, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Fe2,new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Mn,new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.Fe3,new MBIon(0, 0, 0, 0, 0));
 			ipass.put(EIon.Al, new MBIon(0, 0, 0, 0, 0));
 			ipass.put(EIon.NO3, new MBIon(1.0229, 4.5631, 0, 0, -1.4001));
 			ipass.put(EIon.F, new MBIon(0, 0, 0, 0, 0));
 			ipass.put(EIon.Cl, new MBIon(0.9991, 1.4891, 0, 3765.9, -1.1274));
 			ipass.put(EIon.HCO3, new MBIon(0.2018, 13.9941, -130.5, 40784.2, -0.2625));
 			ipass.put(EIon.SO4, new MBIon(0.0045, 0.0039, 0, 2897.2, 0));
-			ipass.put(EIon.P, new MBIon(0, 0, 0, 0, 0));
-			ipass.put(EIon.PO4, new MBIon(0, 0, 0, 0, 0));
+			ipass.put(EIon.P,new MBIon(0, 0, 0, 0,0));
+			ipass.put(EIon.PO4,  new MBIon(0, 0, 0, 0, 0));
 			ipass.put(EIon.HPO4, new MBIon(0.0060, 0, 0, 6676.6, 0));
 			ipass.put(EIon.H2PO4, new MBIon(0.0948, 0.4796, 0, 812.5, 0));
 			this.damCOD = 0.7;

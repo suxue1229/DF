@@ -768,6 +768,10 @@ public class InputForm extends JFrame {
 										.parcj(Double.parseDouble(tableIon
 												.getValueAt(tableIon.getSelectedRow(), tableIon.getSelectedColumn())
 												.toString()));
+								tableIon.getModel()
+										.setValueAt(df2.format(
+												msystem.streams.ion(EIon.values()[tableIon.getSelectedRow()]).parcj()),
+										tableIon.getSelectedRow(), 1);
 								tableIon.getModel().setValueAt(df2.format(
 										msystem.streams.ion(EIon.values()[tableIon.getSelectedRow()]).parmj() * 1000),
 										tableIon.getSelectedRow(), 2);
@@ -784,6 +788,9 @@ public class InputForm extends JFrame {
 										.setValueAt(df2.format(
 												msystem.streams.ion(EIon.values()[tableIon.getSelectedRow()]).parcj()),
 										tableIon.getSelectedRow(), 1);
+								tableIon.getModel().setValueAt(df2.format(
+										msystem.streams.ion(EIon.values()[tableIon.getSelectedRow()]).parmj() * 1000),
+										tableIon.getSelectedRow(), 2);
 								tableIon.getModel()
 										.setValueAt(df2.format(
 												msystem.streams.ion(EIon.values()[tableIon.getSelectedRow()]).parzj()),
@@ -800,11 +807,20 @@ public class InputForm extends JFrame {
 								tableIon.getModel().setValueAt(df2.format(
 										msystem.streams.ion(EIon.values()[tableIon.getSelectedRow()]).parmj() * 1000),
 										tableIon.getSelectedRow(), 2);
+								tableIon.getModel()
+										.setValueAt(df2.format(
+												msystem.streams.ion(EIon.values()[tableIon.getSelectedRow()]).parzj()),
+										tableIon.getSelectedRow(), 3);
 							} else if (tableIon.getSelectedColumn() == 5) {
 								msystem.streams.ion(EIon.values()[11 + tableIon.getSelectedRow()])
 										.parcj(Double.parseDouble(tableIon
 												.getValueAt(tableIon.getSelectedRow(), tableIon.getSelectedColumn())
 												.toString()));
+								tableIon.getModel()
+										.setValueAt(
+												df2.format(msystem.streams
+														.ion(EIon.values()[11 + tableIon.getSelectedRow()]).parcj()),
+										tableIon.getSelectedRow(), 5);
 								tableIon.getModel()
 										.setValueAt(df2.format(msystem.streams
 												.ion(EIon.values()[11 + tableIon.getSelectedRow()]).parmj() * 1000),
@@ -825,6 +841,10 @@ public class InputForm extends JFrame {
 														.ion(EIon.values()[11 + tableIon.getSelectedRow()]).parcj()),
 										tableIon.getSelectedRow(), 5);
 								tableIon.getModel()
+										.setValueAt(df2.format(msystem.streams
+												.ion(EIon.values()[11 + tableIon.getSelectedRow()]).parmj() * 1000),
+										tableIon.getSelectedRow(), 6);
+								tableIon.getModel()
 										.setValueAt(
 												df2.format(msystem.streams
 														.ion(EIon.values()[11 + tableIon.getSelectedRow()]).parzj()),
@@ -843,6 +863,11 @@ public class InputForm extends JFrame {
 										.setValueAt(df2.format(msystem.streams
 												.ion(EIon.values()[11 + tableIon.getSelectedRow()]).parmj() * 1000),
 										tableIon.getSelectedRow(), 6);
+								tableIon.getModel()
+										.setValueAt(
+												df2.format(msystem.streams
+														.ion(EIon.values()[11 + tableIon.getSelectedRow()]).parzj()),
+										tableIon.getSelectedRow(), 7);
 							}
 							msystem.temp = msystem.streams.ion(EIon.P).parmj();
 							tableIon.setValueAt(df2.format(msystem.streams.parqC()), 11, 3);
