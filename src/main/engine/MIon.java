@@ -28,8 +28,8 @@ public class MIon {
 			this.parZj = 1;
 			break;
 		case NH4:
-			this.name = "NH4(以NH4计)";
-			this.parMj = 18.01;
+			this.name = "NH4(以N计)";
+			this.parMj = 14.007;
 			this.parSj = 0.007340;
 			this.parZj = 1;
 			break;
@@ -94,8 +94,8 @@ public class MIon {
 			this.parZj = -1;
 			break;
 		case NO3:
-			this.name = "NO3-(以NO3计)";
-			this.parMj = 62.01;
+			this.name = "NO3-(以N计)";
+			this.parMj = 14.007;
 			this.parSj = 0.007144;
 			this.parZj = -1;
 			break;

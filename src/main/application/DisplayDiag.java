@@ -18,6 +18,7 @@ public class DisplayDiag extends JFrame {
 	private JTable tableworking;
 	private JTable tablecalc;
 	java.text.DecimalFormat df2 = new java.text.DecimalFormat("0.00");
+	java.text.DecimalFormat df3 = new java.text.DecimalFormat("0.000");
 	MSystem msystem;
 	private JTable table_para;
 
@@ -165,9 +166,9 @@ public class DisplayDiag extends JFrame {
 		tablemodel.setValueAt("TDS", EIon.values().length - 2, 0);
 		tablemodel.setValueAt("pH", EIon.values().length - 1, 0);
 		for (int t = 0; t < msystem.section(); t++) {
-			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamp.ion(EIon.P).cp_p), EIon.values().length - 3,
+			tablemodel.setValueAt(df3.format(msystem.sections()[t].streamp.ion(EIon.P).cp_p), EIon.values().length - 3,
 					2 * t + 1);
-			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamc.ion(EIon.P).cc_p), EIon.values().length - 3,
+			tablemodel.setValueAt(df3.format(msystem.sections()[t].streamc.ion(EIon.P).cc_p), EIon.values().length - 3,
 					2 * t + 2);
 
 			tablemodel.setValueAt(df2.format(msystem.sections()[t].streamp.tds()), EIon.values().length - 2, 2 * t + 1);
@@ -187,7 +188,7 @@ public class DisplayDiag extends JFrame {
 						2 * msystem.section() + 1);
 			}
 		}
-		tablemodel.setValueAt(df2.format(msystem.streamp.ion(EIon.P).cp_p), EIon.values().length - 3,
+		tablemodel.setValueAt(df3.format(msystem.streamp.ion(EIon.P).cp_p), EIon.values().length - 3,
 				2 * msystem.section() + 1);
 		tablemodel.setValueAt(df2.format(msystem.streamp.tds()), EIon.values().length - 2, 2 * msystem.section() + 1);
 		tablemodel.setValueAt(df2.format(msystem.streamp.parpH()), EIon.values().length - 1, 2 * msystem.section() + 1);
