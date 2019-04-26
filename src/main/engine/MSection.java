@@ -79,15 +79,14 @@ public class MSection {
 		this.streamc.ion(EIon.P).cc_p = (this.streamc.ion(EIon.PO4).parcj() / this.streamp.ion(EIon.PO4).parMj
 				+ this.streamc.ion(EIon.HPO4).parcj() / this.streamp.ion(EIon.HPO4).parMj
 				+ this.streamc.ion(EIon.H2PO4).parcj() / this.streamp.ion(EIon.H2PO4).parMj) * 30.974;
-
-		this.streamp.ion(EIon.PO4).ioncp_p = this.streamp.ion(EIon.PO4).cp_p * this.streamp.parQ;
-		this.streamp.ion(EIon.HPO4).ioncp_p = this.streamp.ion(EIon.HPO4).cp_p * this.streamp.parQ;
-		this.streamp.ion(EIon.H2PO4).ioncp_p = this.streamp.ion(EIon.H2PO4).cp_p * this.streamp.parQ;
 		this.streamc.parQ *= this.parNVi;
 		this.streamc.updpH(mfH2CO3);
 		this.streamp.parP = parPpi;
 		this.streamp.parQ *= this.parNVi;
 		this.streamp.updpH(mfH2CO3);
+		this.streamp.ion(EIon.PO4).ioncp_p = this.streamp.ion(EIon.PO4).cp_p * this.streamp.parQ;
+		this.streamp.ion(EIon.HPO4).ioncp_p = this.streamp.ion(EIon.HPO4).cp_p * this.streamp.parQ;
+		this.streamp.ion(EIon.H2PO4).ioncp_p = this.streamp.ion(EIon.H2PO4).cp_p * this.streamp.parQ;
 	}
 
 	public MBrane[] branes() {

@@ -727,7 +727,7 @@ public class InputForm extends JFrame {
 		panelIon.add(TextField_CaF2, gbc_TextField_CaF2);
 
 		String[] cation = { "K+", "Na+", "NH4(以N计)", "Ca2+", "Mg2+", "Ba2+", "Sr2+", "Fe2+", "Mn2+", "Fe3+", "Al3+", "总计" };
-		String[] anion = { "NO3-(以N计)", "F-", "Cl-", "HCO3-", "(SO4)2-", "总磷P", "", "", "", "", "", "总计" };
+		String[] anion = { "NO3(以N计)", "F-", "Cl-", "HCO3-", "(SO4)2-", "总磷P", "", "", "", "", "", "总计" };
 		for (int i = 0; i < tableIon.getRowCount(); i++) {
 			tablemodel.setValueAt(cation[i], i, 0);
 			tablemodel.setValueAt(anion[i], i, 4);
@@ -1435,6 +1435,7 @@ public class InputForm extends JFrame {
 		jstleftlist.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
+				msystem.streams.ion(EIon.P).parmj(msystem.temp);
 				if (jstleftlist.getSelectedIndex() == 0) {
 					waterjsp.remove(waterjsp.getRightComponent());
 					jsprightpanel.remove(panelIon);
