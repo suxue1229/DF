@@ -1891,7 +1891,7 @@ public class InputForm extends JFrame {
 		JComboBox<String> modelcomboBox = new JComboBox<>();
 		modelcomboBox.setPreferredSize(new Dimension(150, 30));
 		modelcomboBox.addItem("DF304I-8040(400)");
-		modelcomboBox.addItem("DF30-8040(365)");
+		modelcomboBox.addItem("DF90-8040(400)");
 		modelcomboBox.addItem("DF30-8040(400)");
 		modelcomboBox.setToolTipText("DF304I-8040(400)  尺寸：8x40   膜面积：37.6m2");
 
@@ -2159,7 +2159,7 @@ public class InputForm extends JFrame {
 					tablesystem.setValueAt(msystem.sections()[tablesystem.getSelectedColumn() - 1].model, 1,
 							tablesystem.getSelectedColumn());
 				} else if (index == 1) {
-					modelcomboBox.setToolTipText("DF30-8040(365)   尺寸：8x40   膜面积：34m2");
+					modelcomboBox.setToolTipText("DF90-8040(400)   尺寸：8x40   膜面积：37.6m2");
 					tablesystem.setValueAt(msystem.sections()[tablesystem.getSelectedColumn() - 1].model, 1,
 							tablesystem.getSelectedColumn());
 				} else if (index == 2) {

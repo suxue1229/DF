@@ -173,37 +173,37 @@ public class MBrane {
 	// endregion
 
 	public MBrane(String name) throws Exception {
-		if (name.equals("DF30-8040(365)")) {
+		if (name.equals("DF90-8040(400)")) {
 			this.width = 8;
 			this.length = 40;
-			this.area = 34;
-			this.parA = 82.5;
-			this.parw = 0.03488;
-			this.park = 0.4853;
-			this.park0 = 4.2;
-			this.parx0u = 0.1245;
-			this.parSE = 34;
-			this.parAE = 0.0174;
-			ipass.put(EIon.K, new MBIon(0.6244, 25.7754, 0, 0, 1.1609));
-			ipass.put(EIon.Na, new MBIon(0.5412, 34.1303, 0, 0, 1.1609));
-			ipass.put(EIon.NH4, new MBIon(0.6247, 7.8787, 0, 0, 1.1609));
-			ipass.put(EIon.Ca, new MBIon(0.6519, 2.7940, 0, 0, 1.4391));
-			ipass.put(EIon.Mg, new MBIon(0.6321, 2.4276, 0, 0, 1.4391));
-			ipass.put(EIon.Ba, new MBIon(0.6520, 2.7940, 0, 0, 1.4391));
-			ipass.put(EIon.Sr, new MBIon(0.6519, 2.7940, 0, 0, 1.4391));
-			ipass.put(EIon.Fe2, new MBIon(0.66, 2.4, 0, 0, 0));
-			ipass.put(EIon.Mn, new MBIon(0.65, 2.02, 0, 0, 0));
-			ipass.put(EIon.Fe3, new MBIon(0.03, 0.6, 0, 0, 0));
-			ipass.put(EIon.Al, new MBIon(0.04, 0.65, 0, 0, 0));
-			ipass.put(EIon.NO3, new MBIon(1.0507, 1.5927, 0, 0, -1.0789));
-			ipass.put(EIon.F, new MBIon(0.3965, 23.8206, 0, 0, 0));
-			ipass.put(EIon.Cl, new MBIon(1.0039, 9.7, 0, 0, -0.5));
-			ipass.put(EIon.HCO3, new MBIon(0.5273, 20.3184, 0, 0, 0.065));
-			ipass.put(EIon.SO4, new MBIon(0.0415, 0.6144, 0, 0, 0));
+			this.area = 37.6;
+			this.parA = 78.68;
+			this.parw = 0.0413;
+			this.park = 0.3673;
+			this.park0 = 4.2288;
+			this.parx0u = 0.1418;
+			this.parSE = 37.6;
+			this.parAE = 0.0180;
+			ipass.put(EIon.K, new MBIon(0.0137, 1.5809, 0, 1962.6, 0.2874));
+			ipass.put(EIon.Na, new MBIon(0.0424, 1.4134, 0, 2349.5, -0.0863));
+			ipass.put(EIon.NH4, new MBIon(0.1027, 1.2575, 0, 1529.9, 0.1994));
+			ipass.put(EIon.Ca, new MBIon(0.0004, 0.1164, 0, 2187.8, 0.0422));
+			ipass.put(EIon.Mg, new MBIon(0.0004, 0.2142, 0, 3279.5, 0.0403));
+			ipass.put(EIon.Ba, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Sr, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Fe2, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Mn, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Fe3, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Al, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.NO3, new MBIon(0.1538, 4.8784, 0, 1756.3, 0.0413));
+			ipass.put(EIon.F, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Cl, new MBIon(0.0271, 0.6947, 0, 2452.9, 0.0227));
+			ipass.put(EIon.HCO3, new MBIon(0.0161, 0.0551, 0, 22168.3, 0.0054));
+			ipass.put(EIon.SO4, new MBIon(0.0029, 0.0112, 0, 6244.1, 0));
 			ipass.put(EIon.P, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.PO4, new MBIon(0.5, 0.5, 0, 0, 0));
-			ipass.put(EIon.HPO4, new MBIon(0.0366, 0.5227, 0, 0, -0.1107));
-			ipass.put(EIon.H2PO4, new MBIon(0.0366, 0.5227, 0, 0, -0.1107));
+			ipass.put(EIon.HPO4, new MBIon(0.0024, 0.0004, 0, 4771.2, -0.0024));
+			ipass.put(EIon.H2PO4, new MBIon(0.0024, 0.0004, 0, 4771.2, -0.0024));
 			this.damCOD = 0.7;
 			this.damMin = 0.05;
 			this.damCoe = 1.401;
