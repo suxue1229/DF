@@ -198,7 +198,7 @@ public class MBrane {
 			ipass.put(EIon.NO3, new MBIon(0.1538, 4.8784, 0, 1756.3, 0.0413));
 			ipass.put(EIon.F, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.Cl, new MBIon(0.0271, 0.6947, 0, 2452.9, 0.0227));
-			ipass.put(EIon.HCO3, new MBIon(0.0161, 0.0551, 0, 22168.3, 0.0054));
+			ipass.put(EIon.HCO3, new MBIon(0.0161, 0.0551, 0, 0, 0.0054));
 			ipass.put(EIon.SO4, new MBIon(0.0029, 0.0112, 0, 6244.1, 0));
 			ipass.put(EIon.P, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.PO4, new MBIon(0.5, 0.5, 0, 0, 0));
