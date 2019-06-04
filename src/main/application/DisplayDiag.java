@@ -2,13 +2,21 @@ package application;
 
 import engine.EIon;
 import engine.MSystem;
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.table.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
 
 public class DisplayDiag extends JFrame {
@@ -46,8 +54,10 @@ public class DisplayDiag extends JFrame {
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.TRAILING).addComponent(tabbedPane,
 				GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE));
-		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING).addComponent(tabbedPane,
-				GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE));
+		groupLayout.setVerticalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+						.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, 493, GroupLayout.PREFERRED_SIZE)
+						.addContainerGap(59, Short.MAX_VALUE)));
 
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("系统报告输出", null, panel, null);
@@ -203,17 +213,38 @@ public class DisplayDiag extends JFrame {
 		tableFocusEvent(tablewaterout);
 		JScrollPane scrollPane = new JScrollPane(tablewaterout);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JButton export = new JButton("水质报告输出");
+		export.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+
+				try {
+					fillData(tablewaterout, new File(System.getProperty("user.dir"), "水质报告.xls"), "水质报告");
+					JOptionPane.showMessageDialog(null,
+							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1
-				.setHorizontalGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING).addGroup(Alignment.LEADING,
-						gl_panel_1.createSequentialGroup().addContainerGap()
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
-								.addContainerGap()));
+				.setHorizontalGroup(
+						gl_panel_1.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_panel_1.createSequentialGroup().addContainerGap()
+										.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+												.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 611,
+														Short.MAX_VALUE)
+												.addComponent(export, Alignment.TRAILING))
+										.addContainerGap()));
 		gl_panel_1
-				.setVerticalGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_1.createSequentialGroup().addContainerGap()
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
-								.addContainerGap()));
+				.setVerticalGroup(
+						gl_panel_1.createParallelGroup(Alignment.TRAILING)
+								.addGroup(gl_panel_1.createSequentialGroup().addContainerGap()
+										.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 376,
+												GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED).addComponent(export).addGap(38)));
 		panel_1.setLayout(gl_panel_1);
 
 		JPanel panel_2 = new JPanel();
@@ -222,14 +253,18 @@ public class DisplayDiag extends JFrame {
 		for (int i = 1; i < msystem.section(); i++) {
 			containnum += msystem.sections()[i].parEi;
 		}
-		String[] name_2 = { "元件位置", "回收率", "膜通量(LMH)", "进水流量(m3/h)", "产水流量(m3/h)", "浓水流量(m3/h)" };
-		Object[][] data_2 = new Object[containnum + 1][6];
-		TableModel tablemodel_2 = new DefaultTableModel(data_2, name_2);
-		tableworking = new JTable(tablemodel_2) {
+		tableworking = new JTable(containnum + 1, 6) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
+		DefaultTableModel tablemodel_2 = (DefaultTableModel) tableworking.getModel();
+		tablemodel_2.setValueAt("元件位置", 0, 0);
+		tablemodel_2.setValueAt("回收率", 0, 1);
+		tablemodel_2.setValueAt("膜通量(LMH)", 0, 2);
+		tablemodel_2.setValueAt("进水流量(m3/h)", 0, 3);
+		tablemodel_2.setValueAt("产水流量(m3/h)", 0, 4);
+		tablemodel_2.setValueAt("浓水流量(m3/h)", 0, 5);
 		ArrayList<Integer> rows1 = new ArrayList<>();
 		ArrayList<Integer> cols1 = new ArrayList<>();
 		int num = 0;
@@ -260,38 +295,62 @@ public class DisplayDiag extends JFrame {
 		}
 		tableworking.setDefaultRenderer(Object.class, new myTableCellRenderer(rows1, cols1));
 		tableFocusEvent(tableworking);
-		for (int i = 0; i < tableworking.getColumnCount(); i++) {
-			tablemodel_2.setValueAt(name_2[i], 0, i);
-		}
 		JTableHeader heade_2 = tableworking.getTableHeader();
 		heade_2.setPreferredSize(new Dimension(heade_2.getWidth(), 0));// 表头高度设置
 		tableworking.getTableHeader().setReorderingAllowed(false);
 		tableworking.getTableHeader().setVisible(false);
 		tableworking.setRowHeight(0, 30);// 指定2行的高度30
 		JScrollPane scrollPane_2 = new JScrollPane(tableworking);
+
+		JButton btnNewButton = new JButton("元件工作条件输出");
+		btnNewButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+
+				try {
+					fillData(tableworking, new File(System.getProperty("user.dir"), "元件工作条件输出.xls"), "元件工作条件输出");
+					JOptionPane.showMessageDialog(null,
+							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
+		gl_panel_2.setHorizontalGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_2.createSequentialGroup().addContainerGap()
+						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+								.addComponent(scrollPane_2, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 611,
+										Short.MAX_VALUE)
+								.addComponent(btnNewButton, Alignment.TRAILING))
+						.addContainerGap()));
 		gl_panel_2
-				.setHorizontalGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING).addGroup(Alignment.LEADING,
-						gl_panel_2.createSequentialGroup().addContainerGap()
-								.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
-								.addContainerGap()));
-		gl_panel_2
-				.setVerticalGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_2.createSequentialGroup().addContainerGap()
-								.addComponent(scrollPane_2, GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
-								.addContainerGap()));
+				.setVerticalGroup(
+						gl_panel_2.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_2.createSequentialGroup().addContainerGap()
+										.addComponent(scrollPane_2, GroupLayout.PREFERRED_SIZE, 376,
+												GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNewButton)
+										.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		panel_2.setLayout(gl_panel_2);
 
 		JPanel panel_3 = new JPanel();
 		tabbedPane.addTab("元件结垢预测", null, panel_3, null);
-		String[] name_3 = { "元件位置", "CaCO3(L.I.)", "CaSO4", "Ca3(PO4)2", "BaSO4", "SrSO4", "CaF2" };
-		Object[][] data_3 = new Object[containnum + 1][7];
-		TableModel tablemodel_3 = new DefaultTableModel(data_3, name_3);
-		tablecalc = new JTable(tablemodel_3) {
+		tablecalc = new JTable(containnum + 1, 7) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
+		DefaultTableModel tablemodel_3 = (DefaultTableModel) tablecalc.getModel();
+		tablemodel_3.setValueAt("元件位置", 0, 0);
+		tablemodel_3.setValueAt("CaCO3(L.I.)", 0, 1);
+		tablemodel_3.setValueAt("CaSO4", 0, 2);
+		tablemodel_3.setValueAt("Ca3(PO4)2", 0, 3);
+		tablemodel_3.setValueAt("BaSO4", 0, 4);
+		tablemodel_3.setValueAt("SrSO4", 0, 5);
+		tablemodel_3.setValueAt("CaF2", 0, 6);
 		ArrayList<Integer> rows2 = new ArrayList<>();
 		ArrayList<Integer> cols2 = new ArrayList<>();
 		int ct = 0;
@@ -342,9 +401,6 @@ public class DisplayDiag extends JFrame {
 		}
 		tableFocusEvent(tablecalc);
 		tablecalc.setDefaultRenderer(Object.class, new myTableCellRenderer(rows2, cols2));
-		for (int i = 0; i < tablecalc.getColumnCount(); i++) {
-			tablemodel_3.setValueAt(name_3[i], 0, i);
-		}
 		JTableHeader heade_3 = tablecalc.getTableHeader();
 		heade_3.setPreferredSize(new Dimension(heade_3.getWidth(), 0));// 表头高度设置
 		tablecalc.getTableHeader().setReorderingAllowed(false);
@@ -352,17 +408,39 @@ public class DisplayDiag extends JFrame {
 		tablecalc.setRowHeight(0, 30);// 指定2行的高度30
 		tablecalc.getColumnModel().getColumn(0).setPreferredWidth(100);
 		JScrollPane scrollPane_3 = new JScrollPane(tablecalc);
+
+		JButton btnNewButton_1 = new JButton("元件结垢预测");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				try {
+					fillData(tablecalc, new File(System.getProperty("user.dir"), "元件结垢预测输出.xls"), "元件结垢预测输出");
+					JOptionPane.showMessageDialog(null,
+							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		GroupLayout gl_panel_3 = new GroupLayout(panel_3);
 		gl_panel_3
-				.setHorizontalGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING).addGroup(Alignment.LEADING,
-						gl_panel_3.createSequentialGroup().addContainerGap()
-								.addComponent(scrollPane_3, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
-								.addContainerGap()));
+				.setHorizontalGroup(
+						gl_panel_3.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
+								gl_panel_3.createSequentialGroup().addContainerGap()
+										.addGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING)
+												.addComponent(scrollPane_3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
+														611, Short.MAX_VALUE)
+												.addComponent(btnNewButton_1))
+										.addContainerGap()));
 		gl_panel_3
-				.setVerticalGroup(gl_panel_3.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_3.createSequentialGroup().addContainerGap()
-								.addComponent(scrollPane_3, GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
-								.addContainerGap()));
+				.setVerticalGroup(
+						gl_panel_3.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_3.createSequentialGroup().addContainerGap()
+										.addComponent(scrollPane_3, GroupLayout.PREFERRED_SIZE, 376,
+												GroupLayout.PREFERRED_SIZE)
+										.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNewButton_1)
+										.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		panel_3.setLayout(gl_panel_3);
 		getContentPane().setLayout(groupLayout);
 	}
@@ -387,6 +465,30 @@ public class DisplayDiag extends JFrame {
 				}
 			}
 		});
+	}
+
+	public void fillData(JTable table, File file, String title) {
+		try {
+			WritableWorkbook workbook1 = Workbook.createWorkbook(file);
+			WritableSheet sheet1 = workbook1.createSheet(title, 0);
+			TableModel model = table.getModel();
+
+			for (int i = 0; i < model.getColumnCount(); i++) {
+				Label column = new Label(i, 0, model.getColumnName(i));
+				sheet1.addCell(column);
+			}
+			int j = 0;
+			for (int i = 0; i < model.getRowCount(); i++) {
+				for (j = 0; j < model.getColumnCount(); j++) {
+					Label row = new Label(j, i + 1, model.getValueAt(i, j).toString());
+					sheet1.addCell(row);
+				}
+			}
+			workbook1.write();
+			workbook1.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }
 
