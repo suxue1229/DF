@@ -61,16 +61,24 @@ public class DisplayDiag extends JFrame {
 
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("系统报告输出", null, panel, null);
-
-		String[] name_1 = { "排列", "压力容器数", "膜元件数", "进水压力(MPa)", "产水压力(MPa)", "浓水压力(MPa)", "进水流量(m3/h)", "产水流量(m3/h)",
-				"浓水流量(m3/h)", "通量(LMH)", "最大水通量(LMH)" };
-		Object[][] data_1 = new Object[msystem.section() + 1][11];
-		TableModel tablemodel_1 = new DefaultTableModel(data_1, name_1);
-		tablesystemout = new JTable(tablemodel_1) {
+		
+		tablesystemout = new JTable(msystem.section() + 1,11) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
+		DefaultTableModel tablemodel_1 = (DefaultTableModel) tablesystemout.getModel();
+		tablemodel_1.setValueAt("排列", 0, 0);
+		tablemodel_1.setValueAt("压力容器数", 0, 1);
+		tablemodel_1.setValueAt("膜元件数", 0, 2);
+		tablemodel_1.setValueAt("进水压力(MPa)", 0, 3);
+		tablemodel_1.setValueAt("产水压力(MPa)", 0, 4);
+		tablemodel_1.setValueAt("浓水压力(MPa)", 0, 5);
+		tablemodel_1.setValueAt("进水流量(m3/h)", 0, 6);
+		tablemodel_1.setValueAt("产水流量(m3/h)", 0, 7);
+		tablemodel_1.setValueAt("浓水流量(m3/h)", 0, 8);
+		tablemodel_1.setValueAt("通量(LMH)", 0, 9);
+		tablemodel_1.setValueAt("最大水通量(LMH)", 0, 10);
 		for (int i = 1; i < tablesystemout.getRowCount(); i++) {
 			tablemodel_1.setValueAt("1-" + (i), i, 0);
 			tablemodel_1.setValueAt(msystem.sections()[i - 1].parNVi, i, 1);
@@ -88,9 +96,6 @@ public class DisplayDiag extends JFrame {
 				JOptionPane.showMessageDialog(getContentPane(), e.getMessage(), "错误！", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		for (int i = 0; i < tablesystemout.getColumnCount(); i++) {
-			tablemodel_1.setValueAt(name_1[i], 0, i);
-		}
 		tableFocusEvent(tablesystemout);
 		JScrollPane scrollPane_1 = new JScrollPane(tablesystemout);
 		JTableHeader heade_1 = tablesystemout.getTableHeader();
@@ -98,19 +103,21 @@ public class DisplayDiag extends JFrame {
 		tablesystemout.getTableHeader().setReorderingAllowed(false);
 		tablesystemout.getTableHeader().setVisible(false);
 		tablesystemout.setRowHeight(0, 30);
-		TableModel tablemodel_para = new DefaultTableModel(4, 4);
-		table_para = new JTable(tablemodel_para) {
+		
+		table_para = new JTable(4,4) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
-		String[] colname_0 = { "产水流量", "产水回收率", "循环流量", "进水压力" };
-		String[] colname_2 = { "平均水通量", "温度", "总膜元件数", "总膜面积" };
-		for (int i = 0; i < table_para.getRowCount(); i++) {
-			table_para.setRowHeight(20);
-			tablemodel_para.setValueAt(colname_0[i], i, 0);
-			tablemodel_para.setValueAt(colname_2[i], i, 2);
-		}
+		DefaultTableModel tablemodel_para = (DefaultTableModel) table_para.getModel();
+		tablemodel_para.setValueAt("产水流量", 0, 0);
+		tablemodel_para.setValueAt("产水回收率", 1, 0);
+		tablemodel_para.setValueAt("循环流量", 2, 0);
+		tablemodel_para.setValueAt("进水压力", 3, 0);
+		tablemodel_para.setValueAt("平均水通量", 0, 2);
+		tablemodel_para.setValueAt("温度", 1, 2);
+		tablemodel_para.setValueAt("总膜元件数", 2, 2);
+		tablemodel_para.setValueAt("总膜面积", 3, 2);
 		tablemodel_para.setValueAt(String.format("%.1f", msystem.pariQp) + " m3/h", 0, 1);
 		tablemodel_para.setValueAt(String.format("%.1f", msystem.pariY) + " %", 1, 1);
 		tablemodel_para.setValueAt(String.format("%.1f", msystem.pariQr) + " m3/h", 2, 1);
@@ -134,18 +141,64 @@ public class DisplayDiag extends JFrame {
 		heade_para.setPreferredSize(new Dimension(heade_1.getWidth(), 0));// 表头高度设置
 		table_para.getTableHeader().setReorderingAllowed(false);
 		table_para.getTableHeader().setVisible(false);
+		
+		JButton btnNewButton_2 = new JButton("输入参数导出");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+
+				try {
+					fillData(table_para, new File(System.getProperty("user.dir"), "输入参数.xls"), "输入参数");
+					JOptionPane.showMessageDialog(null,
+							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		
+		JButton btnNewButton_3 = new JButton("系统参数导出");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+
+				try {
+					fillData(tablesystemout, new File(System.getProperty("user.dir"), "系统参数.xls"), "系统参数");
+					JOptionPane.showMessageDialog(null,
+							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup().addContainerGap()
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(scrollPane_para, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
-								.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE))
-				.addContainerGap()));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup().addGap(23)
-						.addComponent(scrollPane_para, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE).addGap(33)
-						.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
-						.addContainerGap(64, Short.MAX_VALUE)));
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(scrollPane_para, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+						.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+						.addComponent(btnNewButton_2)
+						.addComponent(btnNewButton_3))
+					.addContainerGap())
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(scrollPane_para, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnNewButton_2)
+					.addGap(18)
+					.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 232, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnNewButton_3)
+					.addGap(40))
+		);
 		panel.setLayout(gl_panel);
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("水质报告输出", null, panel_1, null);
@@ -213,7 +266,7 @@ public class DisplayDiag extends JFrame {
 		tableFocusEvent(tablewaterout);
 		JScrollPane scrollPane = new JScrollPane(tablewaterout);
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		JButton export = new JButton("水质报告输出");
+		JButton export = new JButton("水质报告导出");
 		export.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
@@ -302,14 +355,14 @@ public class DisplayDiag extends JFrame {
 		tableworking.setRowHeight(0, 30);// 指定2行的高度30
 		JScrollPane scrollPane_2 = new JScrollPane(tableworking);
 
-		JButton btnNewButton = new JButton("元件工作条件输出");
+		JButton btnNewButton = new JButton("元件工作条件导出");
 		btnNewButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 
 				try {
-					fillData(tableworking, new File(System.getProperty("user.dir"), "元件工作条件输出.xls"), "元件工作条件输出");
+					fillData(tableworking, new File(System.getProperty("user.dir"), "元件工作条件.xls"), "元件工作条件");
 					JOptionPane.showMessageDialog(null,
 							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
 							JOptionPane.INFORMATION_MESSAGE);
@@ -409,12 +462,12 @@ public class DisplayDiag extends JFrame {
 		tablecalc.getColumnModel().getColumn(0).setPreferredWidth(100);
 		JScrollPane scrollPane_3 = new JScrollPane(tablecalc);
 
-		JButton btnNewButton_1 = new JButton("元件结垢预测");
+		JButton btnNewButton_1 = new JButton("元件结垢预测导出");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				try {
-					fillData(tablecalc, new File(System.getProperty("user.dir"), "元件结垢预测输出.xls"), "元件结垢预测输出");
+					fillData(tablecalc, new File(System.getProperty("user.dir"), "元件结垢预测.xls"), "元件结垢预测");
 					JOptionPane.showMessageDialog(null,
 							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
 							JOptionPane.INFORMATION_MESSAGE);
