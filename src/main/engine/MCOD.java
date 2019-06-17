@@ -2,8 +2,8 @@ package engine;
 
 public class MCOD {
 	public final String name;
-	// 分子质量
-	public double parMj = 0;
+	// 截留率
+	public double parRCOD = 1;
 	// 质量浓度 mg/L
 	public double parcj = 0;
 
@@ -13,7 +13,7 @@ public class MCOD {
 
 	public MCOD copy() {
 		MCOD cod = new MCOD(this.name);
-		cod.parMj = this.parMj;
+		cod.parRCOD = this.parRCOD;
 		cod.parcj = this.parcj;
 		return cod;
 	}

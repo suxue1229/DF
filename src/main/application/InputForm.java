@@ -71,14 +71,26 @@ public class InputForm extends JFrame {
 	java.text.DecimalFormat df2 = new java.text.DecimalFormat("0.00");
 	MSystem msystem;
 	private JTextField textFieldDate, TextField_CaCO3, TextField_BaSO4, TextField_CaSO4, TextField_CaF2, TextField_Ca3,
-			TextField_SrSO4, textFieldCOD, textFieldOrganismM1, textFieldOrganismC1, textFieldOrganismM2,
-			textFieldOrganismC2, textFieldsection, TextFieldpariJ, TextFieldpariYD, textFieldpariY, textFieldparEi,
-			textFieldparPpi, textFieldparNVi, textFieldparDpi, textFieldparPLi, TextFieldpariQf, textFieldpariQp,
-			textFieldpariQr, TextFieldpariQc;
+			TextField_SrSO4, textFieldCOD, textFieldsection, TextFieldpariJ, TextFieldpariYD, textFieldpariY,
+			textFieldparEi, textFieldparPpi, textFieldparNVi, textFieldparDpi, textFieldparPLi, TextFieldpariQf,
+			textFieldpariQp, textFieldpariQr, TextFieldpariQc;
 	private JLabel lblMpa_MPa2, lblMpa_2, lblMpa_MPa0;
 	private JPanel panelIon;
 	private JRadioButton jrbCOD;
-	private JRadioButton jrbOrganism;
+	private JRadioButton jrbOther;
+	private JRadioButton jrbTOC;
+	private ButtonGroup buttongroup;
+	private JTextField textFieldCOD_ROD;
+	private JTextField textFieldTOC_ROD;
+	private JTextField textFieldTOC;
+	private JTextField textFieldother_ROD;
+	private JTextField textFieldother;
+	private GridBagConstraints gbc_labelTOC;
+	private GridBagConstraints gbc_textFieldTOC;
+	private GridBagConstraints gbc_label_TOC_mgl;
+	private GridBagConstraints gbc_textFieldother_ROD;
+	private GridBagConstraints gbc_labelother;
+	private GridBagConstraints gbc_label_other_mgl;
 
 	/**
 	 * Create the application.
@@ -726,7 +738,8 @@ public class InputForm extends JFrame {
 		gbc_TextField_CaF2.gridy = 7;
 		panelIon.add(TextField_CaF2, gbc_TextField_CaF2);
 
-		String[] cation = { "K+", "Na+", "NH4(以N计)", "Ca2+", "Mg2+", "Ba2+", "Sr2+", "Fe2+", "Mn2+", "Fe3+", "Al3+", "总计" };
+		String[] cation = { "K+", "Na+", "NH4(以N计)", "Ca2+", "Mg2+", "Ba2+", "Sr2+", "Fe2+", "Mn2+", "Fe3+", "Al3+",
+				"总计" };
 		String[] anion = { "NO3(以N计)", "F-", "Cl-", "HCO3-", "(SO4)2-", "总磷P", "", "", "", "", "", "总计" };
 		for (int i = 0; i < tableIon.getRowCount(); i++) {
 			tablemodel.setValueAt(cation[i], i, 0);
@@ -1052,8 +1065,6 @@ public class InputForm extends JFrame {
 		// panel_2有机物信息面板
 		JPanel organismpanel = new JPanel();
 		jrbCOD = new JRadioButton("COD总量", true);
-		ButtonGroup bg = new ButtonGroup();// 初始化按钮组
-		bg.add(jrbCOD);// 加入按钮组
 		JPanel panelCOD = new JPanel();
 		GridBagConstraints gbc_textField_11_1 = new GridBagConstraints();
 		gbc_textField_11_1.anchor = GridBagConstraints.NORTHWEST;
@@ -1061,8 +1072,6 @@ public class InputForm extends JFrame {
 		gbc_textField_11_1.insets = new Insets(0, 0, 0, 5);
 		gbc_textField_11_1.gridx = 2;
 		gbc_textField_11_1.gridy = 0;
-
-		JPanel panelOrganism = new JPanel();
 		GridBagConstraints gbc_label_14_1 = new GridBagConstraints();
 		gbc_label_14_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_label_14_1.insets = new Insets(0, 0, 5, 5);
@@ -1123,123 +1132,188 @@ public class InputForm extends JFrame {
 		gbc_label_16_1.anchor = GridBagConstraints.WEST;
 		gbc_label_16_1.gridx = 8;
 		gbc_label_16_1.gridy = 5;
-		jrbOrganism = new JRadioButton("有机物组成");
-		bg.add(jrbOrganism);
+		jrbOther = new JRadioButton("其它物质");
+		jrbTOC = new JRadioButton("TOC");
+
+		JPanel panelTOC = new JPanel();
+		GridBagLayout gbl_panelTOC = new GridBagLayout();
+		gbl_panelTOC.columnWidths = new int[] { 80, 150, 60, 80, 150, 60, 0 };
+		gbl_panelTOC.rowHeights = new int[] { 10, 24, 10, 0, 0 };
+		gbl_panelTOC.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
+		gbl_panelTOC.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
+		panelTOC.setLayout(gbl_panelTOC);
+
+		JLabel labelTOC_ROD = new JLabel("截留率");
+		GridBagConstraints gbc_labelTOC_ROD = new GridBagConstraints();
+		gbc_labelTOC_ROD.anchor = GridBagConstraints.EAST;
+		gbc_labelTOC_ROD.insets = new Insets(0, 0, 5, 5);
+		gbc_labelTOC_ROD.gridx = 0;
+		gbc_labelTOC_ROD.gridy = 1;
+		panelTOC.add(labelTOC_ROD, gbc_labelTOC_ROD);
+
+		textFieldTOC_ROD = new JTextField(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+		textFieldTOC_ROD.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldROD(textFieldTOC_ROD);
+			}
+		});
+		textFieldTOC_ROD.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldROD(textFieldTOC_ROD);
+				}
+			}
+		});
+		GridBagConstraints gbc_textFieldTOC_ROD = new GridBagConstraints();
+		gbc_textFieldTOC_ROD.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldTOC_ROD.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldTOC_ROD.gridx = 1;
+		gbc_textFieldTOC_ROD.gridy = 1;
+		panelTOC.add(textFieldTOC_ROD, gbc_textFieldTOC_ROD);
+
+		JLabel labelTOC = new JLabel("TOC浓度");
+		gbc_labelTOC = new GridBagConstraints();
+		gbc_labelTOC.anchor = GridBagConstraints.EAST;
+		gbc_labelTOC.insets = new Insets(0, 0, 5, 5);
+		gbc_labelTOC.gridx = 3;
+		gbc_labelTOC.gridy = 1;
+		panelTOC.add(labelTOC, gbc_labelTOC);
+
+		textFieldTOC = new JTextField(String.format("%.2f", msystem.streams.cods()[0].parcj));
+		textFieldTOC.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldparcj(textFieldTOC);
+			}
+		});
+		textFieldTOC.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldparcj(textFieldTOC);
+				}
+			}
+		});
+		gbc_textFieldTOC = new GridBagConstraints();
+		gbc_textFieldTOC.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldTOC.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldTOC.gridx = 4;
+		gbc_textFieldTOC.gridy = 1;
+		panelTOC.add(textFieldTOC, gbc_textFieldTOC);
+
+		JLabel label_TOC_mgl = new JLabel("mg/L");
+		gbc_label_TOC_mgl = new GridBagConstraints();
+		gbc_label_TOC_mgl.anchor = GridBagConstraints.WEST;
+		gbc_label_TOC_mgl.insets = new Insets(0, 0, 5, 0);
+		gbc_label_TOC_mgl.gridx = 5;
+		gbc_label_TOC_mgl.gridy = 1;
+		panelTOC.add(label_TOC_mgl, gbc_label_TOC_mgl);
+
+		JPanel panelother = new JPanel();
+		GridBagLayout gbl_panelother = new GridBagLayout();
+		gbl_panelother.columnWidths = new int[] { 80, 150, 60, 80, 150, 60, 0 };
+		gbl_panelother.rowHeights = new int[] { 10, 24, 10, 0, 0 };
+		gbl_panelother.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
+		gbl_panelother.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
+		panelother.setLayout(gbl_panelother);
+
+		JLabel labelother_ROD = new JLabel("截留率");
+		GridBagConstraints gbc_labelother_ROD = new GridBagConstraints();
+		gbc_labelother_ROD.anchor = GridBagConstraints.EAST;
+		gbc_labelother_ROD.insets = new Insets(0, 0, 5, 5);
+		gbc_labelother_ROD.gridx = 0;
+		gbc_labelother_ROD.gridy = 1;
+		panelother.add(labelother_ROD, gbc_labelother_ROD);
+
+		textFieldother_ROD = new JTextField(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+		textFieldother_ROD.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldROD(textFieldother_ROD);
+			}
+		});
+		textFieldother_ROD.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldROD(textFieldother_ROD);
+				}
+			}
+		});
+		gbc_textFieldother_ROD = new GridBagConstraints();
+		gbc_textFieldother_ROD.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldother_ROD.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldother_ROD.gridx = 1;
+		gbc_textFieldother_ROD.gridy = 1;
+		panelother.add(textFieldother_ROD, gbc_textFieldother_ROD);
+
+		JLabel labelother = new JLabel("浓度");
+		gbc_labelother = new GridBagConstraints();
+		gbc_labelother.anchor = GridBagConstraints.EAST;
+		gbc_labelother.insets = new Insets(0, 0, 5, 5);
+		gbc_labelother.gridx = 3;
+		gbc_labelother.gridy = 1;
+		panelother.add(labelother, gbc_labelother);
+
+		textFieldother = new JTextField(String.format("%.2f", msystem.streams.cods()[0].parcj));
+		textFieldother.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldparcj(textFieldother);
+			}
+		});
+		textFieldother.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldparcj(textFieldother);
+				}
+			}
+		});
+		GridBagConstraints gbc_textFieldother = new GridBagConstraints();
+		gbc_textFieldother.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldother.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldother.gridx = 4;
+		gbc_textFieldother.gridy = 1;
+		panelother.add(textFieldother, gbc_textFieldother);
+
+		JLabel label_other_mgl = new JLabel("mg/L");
+		gbc_label_other_mgl = new GridBagConstraints();
+		gbc_label_other_mgl.anchor = GridBagConstraints.WEST;
+		gbc_label_other_mgl.insets = new Insets(0, 0, 5, 0);
+		gbc_label_other_mgl.gridx = 5;
+		gbc_label_other_mgl.gridy = 1;
+		panelother.add(label_other_mgl, gbc_label_other_mgl);
 
 		GroupLayout gl_panel_2 = new GroupLayout(organismpanel);
-		gl_panel_2.setHorizontalGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup().addContainerGap()
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING, false)
-										.addComponent(jrbOrganism).addComponent(jrbCOD)
-										.addComponent(panelCOD, GroupLayout.PREFERRED_SIZE, 456, Short.MAX_VALUE))
-						.addComponent(panelOrganism, Alignment.TRAILING, 0, 0, Short.MAX_VALUE)).addContainerGap()));
+		gl_panel_2
+				.setHorizontalGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_2.createSequentialGroup().addContainerGap()
+								.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING).addComponent(jrbCOD)
+										.addComponent(panelCOD, GroupLayout.PREFERRED_SIZE, 456,
+												GroupLayout.PREFERRED_SIZE)
+										.addComponent(jrbTOC)
+										.addComponent(panelTOC, GroupLayout.PREFERRED_SIZE, 456,
+												GroupLayout.PREFERRED_SIZE)
+										.addComponent(jrbOther).addComponent(panelother, GroupLayout.PREFERRED_SIZE,
+												456, GroupLayout.PREFERRED_SIZE))
+								.addContainerGap()));
 		gl_panel_2
 				.setVerticalGroup(
 						gl_panel_2.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel_2.createSequentialGroup().addGap(24).addComponent(jrbCOD)
-										.addPreferredGap(ComponentPlacement.RELATED)
+										.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
 										.addComponent(panelCOD, GroupLayout.PREFERRED_SIZE, 42,
 												GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED, 16, Short.MAX_VALUE).addComponent(jrbOrganism)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addComponent(panelOrganism, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE).addGap(12)));
-		GridBagLayout panelorgan = new GridBagLayout();
-		panelorgan.columnWidths = new int[] { 80, 80, 120, 150, 80, 33, 0 };
-		panelorgan.rowHeights = new int[] { 10, 24, 24, 18, 24, 24, 18, 0 };
-		panelorgan.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
-		panelorgan.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
-		panelOrganism.setLayout(panelorgan);
-
-		JLabel labelOrganism1 = new JLabel("有机物1");
-		GridBagConstraints gbc_label_13 = new GridBagConstraints();
-		gbc_label_13.anchor = GridBagConstraints.WEST;
-		gbc_label_13.insets = new Insets(0, 0, 5, 5);
-		gbc_label_13.gridx = 1;
-		gbc_label_13.gridy = 1;
-		panelOrganism.add(labelOrganism1, gbc_label_13);
-		JLabel labelOrganismM1 = new JLabel("分子质量(M1)");
-		GridBagConstraints gbc_label_14 = new GridBagConstraints();
-		gbc_label_14.anchor = GridBagConstraints.WEST;
-		gbc_label_14.insets = new Insets(0, 0, 5, 5);
-		gbc_label_14.gridx = 2;
-		gbc_label_14.gridy = 2;
-		panelOrganism.add(labelOrganismM1, gbc_label_14);
-		textFieldOrganismM1 = new JTextField();
-		textFieldOrganismM1.setColumns(10);
-		GridBagConstraints gbc_textField_12 = new GridBagConstraints();
-		gbc_textField_12.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_12.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_12.gridx = 3;
-		gbc_textField_12.gridy = 2;
-		panelOrganism.add(textFieldOrganismM1, gbc_textField_12);
-		JLabel labelOrganismC1 = new JLabel("浓度");
-		GridBagConstraints gbc_label_20 = new GridBagConstraints();
-		gbc_label_20.anchor = GridBagConstraints.WEST;
-		gbc_label_20.insets = new Insets(0, 0, 5, 5);
-		gbc_label_20.gridx = 2;
-		gbc_label_20.gridy = 3;
-		panelOrganism.add(labelOrganismC1, gbc_label_20);
-		textFieldOrganismC1 = new JTextField();
-		textFieldOrganismC1.setColumns(10);
-		GridBagConstraints gbc_textField_13 = new GridBagConstraints();
-		gbc_textField_13.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_13.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_13.gridx = 3;
-		gbc_textField_13.gridy = 3;
-		panelOrganism.add(textFieldOrganismC1, gbc_textField_13);
-		JLabel label_17 = new JLabel("mg/L");
-		GridBagConstraints gbc_label_17 = new GridBagConstraints();
-		gbc_label_17.anchor = GridBagConstraints.WEST;
-		gbc_label_17.insets = new Insets(0, 0, 5, 5);
-		gbc_label_17.gridx = 4;
-		gbc_label_17.gridy = 3;
-		panelOrganism.add(label_17, gbc_label_17);
-
-		JLabel labelOrganism2 = new JLabel("有机物2");
-		GridBagConstraints gbc_label_18 = new GridBagConstraints();
-		gbc_label_18.anchor = GridBagConstraints.WEST;
-		gbc_label_18.insets = new Insets(0, 0, 5, 5);
-		gbc_label_18.gridx = 1;
-		gbc_label_18.gridy = 4;
-		panelOrganism.add(labelOrganism2, gbc_label_18);
-		JLabel labelOrganismM2 = new JLabel("分子质量(M2)");
-		GridBagConstraints gbc_label_19 = new GridBagConstraints();
-		gbc_label_19.anchor = GridBagConstraints.WEST;
-		gbc_label_19.insets = new Insets(0, 0, 5, 5);
-		gbc_label_19.gridx = 2;
-		gbc_label_19.gridy = 5;
-		panelOrganism.add(labelOrganismM2, gbc_label_19);
-		textFieldOrganismM2 = new JTextField();
-		textFieldOrganismM2.setColumns(10);
-		GridBagConstraints gbc_textField_14 = new GridBagConstraints();
-		gbc_textField_14.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_14.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_14.gridx = 3;
-		gbc_textField_14.gridy = 5;
-		panelOrganism.add(textFieldOrganismM2, gbc_textField_14);
-		JLabel labelOrganismC2 = new JLabel("浓度");
-		GridBagConstraints gbc_label_15 = new GridBagConstraints();
-		gbc_label_15.anchor = GridBagConstraints.WEST;
-		gbc_label_15.insets = new Insets(0, 0, 5, 5);
-		gbc_label_15.gridx = 2;
-		gbc_label_15.gridy = 6;
-		panelOrganism.add(labelOrganismC2, gbc_label_15);
-		textFieldOrganismC2 = new JTextField();
-		textFieldOrganismC2.setColumns(10);
-		GridBagConstraints gbc_textField_15 = new GridBagConstraints();
-		gbc_textField_15.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_15.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_15.gridx = 3;
-		gbc_textField_15.gridy = 6;
-		panelOrganism.add(textFieldOrganismC2, gbc_textField_15);
-		JLabel label_16 = new JLabel("mg/L");
-		GridBagConstraints gbc_label_16 = new GridBagConstraints();
-		gbc_label_16.insets = new Insets(0, 0, 5, 5);
-		gbc_label_16.anchor = GridBagConstraints.WEST;
-		gbc_label_16.gridx = 4;
-		gbc_label_16.gridy = 6;
-		panelOrganism.add(label_16, gbc_label_16);
+										.addGap(24).addComponent(jrbTOC).addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(panelTOC, GroupLayout.PREFERRED_SIZE, 42,
+												GroupLayout.PREFERRED_SIZE)
+										.addGap(27).addComponent(jrbOther)
+										.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(panelother,
+												GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+				.addGap(38)));
 		GridBagConstraints gbc_label_12_1 = new GridBagConstraints();
 		gbc_label_12_1.anchor = GridBagConstraints.WEST;
 		gbc_label_12_1.insets = new Insets(0, 0, 5, 5);
@@ -1247,186 +1321,151 @@ public class InputForm extends JFrame {
 		gbc_label_12_1.gridy = 0;
 
 		GridBagLayout panelcod = new GridBagLayout();
-		panelcod.columnWidths = new int[] { 80, 60, 150, 80, 120, 60 };
+		panelcod.columnWidths = new int[] { 80, 150, 60, 80, 150, 60 };
 		panelcod.rowHeights = new int[] { 10, 24, 10, 0 };
-		panelcod.columnWeights = new double[] { 1.0, 0.0, 1.0, 1.0, 1.0, 1.0 };
+		panelcod.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
 		panelcod.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0 };
 		panelCOD.setLayout(panelcod);
-		JLabel labelCOD = new JLabel("COD");
-		GridBagConstraints gbc_label_11 = new GridBagConstraints();
-		gbc_label_11.anchor = GridBagConstraints.WEST;
-		gbc_label_11.insets = new Insets(0, 0, 5, 5);
-		gbc_label_11.gridx = 1;
-		gbc_label_11.gridy = 1;
-		panelCOD.add(labelCOD, gbc_label_11);
-		textFieldCOD = new JTextField();
-		textFieldCOD.setColumns(10);
-		GridBagConstraints gbc_textField_11 = new GridBagConstraints();
-		gbc_textField_11.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_11.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_11.gridx = 2;
-		gbc_textField_11.gridy = 1;
-		panelCOD.add(textFieldCOD, gbc_textField_11);
-		JLabel label_12 = new JLabel("mg/L");
-		GridBagConstraints gbc_label_12 = new GridBagConstraints();
-		gbc_label_12.insets = new Insets(0, 0, 5, 5);
-		gbc_label_12.anchor = GridBagConstraints.WEST;
-		gbc_label_12.gridx = 3;
-		gbc_label_12.gridy = 1;
-		panelCOD.add(label_12, gbc_label_12);
 		organismpanel.setLayout(gl_panel_2);
-		msystem.streams.codmode(true);
-		textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
+
+		JLabel labelCOD_ROD = new JLabel("截留率");
+		GridBagConstraints gbc_labelCOD_ROD = new GridBagConstraints();
+		gbc_labelCOD_ROD.anchor = GridBagConstraints.EAST;
+		gbc_labelCOD_ROD.insets = new Insets(0, 0, 5, 5);
+		gbc_labelCOD_ROD.gridx = 0;
+		gbc_labelCOD_ROD.gridy = 1;
+		panelCOD.add(labelCOD_ROD, gbc_labelCOD_ROD);
+
+		textFieldCOD_ROD = new JTextField(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+		textFieldCOD_ROD.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldROD(textFieldCOD_ROD);
+			}
+		});
+		textFieldCOD_ROD.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldROD(textFieldCOD_ROD);
+				}
+			}
+		});
+		GridBagConstraints gbc_textFieldCOD_ROD = new GridBagConstraints();
+		gbc_textFieldCOD_ROD.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldCOD_ROD.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldCOD_ROD.gridx = 1;
+		gbc_textFieldCOD_ROD.gridy = 1;
+		panelCOD.add(textFieldCOD_ROD, gbc_textFieldCOD_ROD);
+		JLabel labelCOD = new JLabel("COD浓度");
+		GridBagConstraints gbc_label_COD = new GridBagConstraints();
+		gbc_label_COD.anchor = GridBagConstraints.EAST;
+		gbc_label_COD.insets = new Insets(0, 0, 5, 5);
+		gbc_label_COD.gridx = 3;
+		gbc_label_COD.gridy = 1;
+		panelCOD.add(labelCOD, gbc_label_COD);
+		textFieldCOD = new JTextField(String.format("%.2f", msystem.streams.cods()[0].parcj));
 		textFieldCOD.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldevent(textFieldCOD);
-				msystem.streams.cods()[0].parcj = Double.parseDouble(textFieldCOD.getText());
-				textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
+				textfieldparcj(textFieldCOD);
 			}
 		});
 		textFieldCOD.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldevent(textFieldCOD);
-					msystem.streams.cods()[0].parcj = Double.parseDouble(textFieldCOD.getText());
-					textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
+					textfieldparcj(textFieldCOD);
 				}
 			}
 		});
-		for (int i = 0; i < panelOrganism.getComponentCount(); i++) {
-			panelOrganism.getComponent(i).setEnabled(false);
+		GridBagConstraints gbc_textField_COD = new GridBagConstraints();
+		gbc_textField_COD.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField_COD.insets = new Insets(0, 0, 5, 5);
+		gbc_textField_COD.gridx = 4;
+		gbc_textField_COD.gridy = 1;
+		panelCOD.add(textFieldCOD, gbc_textField_COD);
+		JLabel label_COD_mgl = new JLabel("mg/L");
+		GridBagConstraints gbc_label_COD_mgl = new GridBagConstraints();
+		gbc_label_COD_mgl.insets = new Insets(0, 0, 5, 0);
+		gbc_label_COD_mgl.anchor = GridBagConstraints.WEST;
+		gbc_label_COD_mgl.gridx = 5;
+		gbc_label_COD_mgl.gridy = 1;
+		panelCOD.add(label_COD_mgl, gbc_label_COD_mgl);
+
+		buttongroup = new ButtonGroup();
+		buttongroup.add(jrbCOD);
+		buttongroup.add(jrbTOC);
+		buttongroup.add(jrbOther);
+
+		for (int j = 0; j < panelCOD.getComponentCount(); j++) {
+			panelCOD.getComponent(j).setEnabled(true);
 		}
+		for (int j = 0; j < panelTOC.getComponentCount(); j++) {
+			panelTOC.getComponent(j).setEnabled(false);
+		}
+		for (int j = 0; j < panelother.getComponentCount(); j++) {
+			panelother.getComponent(j).setEnabled(false);
+		}
+
 		// COD
 		jrbCOD.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (jrbCOD.isSelected()) {
-					msystem.streams.codmode(true);
-					textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-					textFieldCOD.addFocusListener(new FocusAdapter() {
-						@Override
-						public void focusLost(FocusEvent e) {
-							textfieldevent(textFieldCOD);
-							msystem.streams.cods()[0].parcj = Double.parseDouble(textFieldCOD.getText());
-							textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-						}
-					});
-					textFieldCOD.addKeyListener(new java.awt.event.KeyAdapter() {
-						public void keyPressed(KeyEvent e) {
-							if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-							{
-								textfieldevent(textFieldCOD);
-								msystem.streams.cods()[0].parcj = Double.parseDouble(textFieldCOD.getText());
-								textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-							}
-						}
-					});
-					for (int i = 0; i < panelOrganism.getComponentCount(); i++) {
-						panelOrganism.getComponent(i).setEnabled(false);
-					}
+					msystem.streams.codmode(0);
 					for (int j = 0; j < panelCOD.getComponentCount(); j++) {
 						panelCOD.getComponent(j).setEnabled(true);
+					}
+					for (int j = 0; j < panelTOC.getComponentCount(); j++) {
+						panelTOC.getComponent(j).setEnabled(false);
+					}
+					for (int j = 0; j < panelother.getComponentCount(); j++) {
+						panelother.getComponent(j).setEnabled(false);
 					}
 				}
 			}
 		});
-		// 有机物1、2
-		jrbOrganism.addActionListener(new ActionListener() {
+		// TOC
+		jrbTOC.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (jrbOrganism.isSelected()) {
-					msystem.streams.codmode(false);
-					textFieldOrganismM1.setText(String.format("%.2f", msystem.streams.cods()[0].parMj));
-					textFieldOrganismM1.addFocusListener(new FocusAdapter() {
-						@Override
-						public void focusLost(FocusEvent e) {
-							textfieldevent(textFieldOrganismM1);
-							msystem.streams.cods()[0].parMj = Double.parseDouble(textFieldOrganismM1.getText());
-							textFieldOrganismM1.setText(String.format("%.2f", msystem.streams.cods()[0].parMj));
-						}
-					});
-					textFieldOrganismM1.addKeyListener(new java.awt.event.KeyAdapter() {
-						public void keyPressed(KeyEvent e) {
-							if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-							{
-								textfieldevent(textFieldOrganismM1);
-								msystem.streams.cods()[0].parMj = Double.parseDouble(textFieldOrganismM1.getText());
-								textFieldOrganismM1.setText(String.format("%.2f", msystem.streams.cods()[0].parMj));
-							}
-						}
-					});
-					textFieldOrganismC1.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-					textFieldOrganismC1.addFocusListener(new FocusAdapter() {
-						@Override
-						public void focusLost(FocusEvent e) {
-							textfieldevent(textFieldOrganismC1);
-							msystem.streams.cods()[0].parcj = Double.parseDouble(textFieldOrganismC1.getText());
-							textFieldOrganismC1.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-						}
-					});
-					textFieldOrganismC1.addKeyListener(new java.awt.event.KeyAdapter() {
-						public void keyPressed(KeyEvent e) {
-							if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-							{
-								textfieldevent(textFieldOrganismC1);
-								msystem.streams.cods()[0].parcj = Double.parseDouble(textFieldOrganismC1.getText());
-								textFieldOrganismC1.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-							}
-						}
-					});
-					textFieldOrganismM2.setText(String.format("%.2f", msystem.streams.cods()[1].parMj));
-					textFieldOrganismM2.addFocusListener(new FocusAdapter() {
-						@Override
-						public void focusLost(FocusEvent e) {
-							textfieldevent(textFieldOrganismM2);
-							msystem.streams.cods()[1].parMj = Double.parseDouble(textFieldOrganismM2.getText());
-							textFieldOrganismM2.setText(String.format("%.2f", msystem.streams.cods()[1].parMj));
-						}
-					});
-					textFieldOrganismM2.addKeyListener(new java.awt.event.KeyAdapter() {
-						public void keyPressed(KeyEvent e) {
-							if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-							{
-								textfieldevent(textFieldOrganismM2);
-								msystem.streams.cods()[1].parMj = Double.parseDouble(textFieldOrganismM2.getText());
-								textFieldOrganismM2.setText(String.format("%.2f", msystem.streams.cods()[1].parMj));
-							}
-						}
-					});
-					textFieldOrganismC2.setText(String.format("%.2f", msystem.streams.cods()[1].parcj));
-					textFieldOrganismC2.addFocusListener(new FocusAdapter() {
-						@Override
-						public void focusLost(FocusEvent e) {
-							textfieldevent(textFieldOrganismC2);
-							msystem.streams.cods()[1].parcj = Double.parseDouble(textFieldOrganismC2.getText());
-							textFieldOrganismC2.setText(String.format("%.2f", msystem.streams.cods()[1].parcj));
-						}
-					});
-					textFieldOrganismC2.addKeyListener(new java.awt.event.KeyAdapter() {
-						public void keyPressed(KeyEvent e) {
-							if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-							{
-								textfieldevent(textFieldOrganismC2);
-								msystem.streams.cods()[1].parcj = Double.parseDouble(textFieldOrganismC2.getText());
-								textFieldOrganismC2.setText(String.format("%.2f", msystem.streams.cods()[1].parcj));
-							}
-						}
-					});
-					for (int i = 0; i < panelOrganism.getComponentCount(); i++) {
-						panelOrganism.getComponent(i).setEnabled(true);
-					}
+				if (jrbTOC.isSelected()) {
+					msystem.streams.codmode(1);
 					for (int j = 0; j < panelCOD.getComponentCount(); j++) {
 						panelCOD.getComponent(j).setEnabled(false);
+					}
+					for (int j = 0; j < panelTOC.getComponentCount(); j++) {
+						panelTOC.getComponent(j).setEnabled(true);
+					}
+					for (int j = 0; j < panelother.getComponentCount(); j++) {
+						panelother.getComponent(j).setEnabled(false);
 					}
 				}
 			}
 		});
 
+		// 其它物质
+		jrbOther.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (jrbOther.isSelected()) {
+					msystem.streams.codmode(2);
+					for (int j = 0; j < panelCOD.getComponentCount(); j++) {
+						panelCOD.getComponent(j).setEnabled(false);
+					}
+					for (int j = 0; j < panelTOC.getComponentCount(); j++) {
+						panelTOC.getComponent(j).setEnabled(false);
+					}
+					for (int j = 0; j < panelother.getComponentCount(); j++) {
+						panelother.getComponent(j).setEnabled(true);
+					}
+				}
+			}
+		});
 		JPanel jsprightpanel = new JPanel();
 		String[] str = { "进水参数", "离子信息", "有机物信息" };
-		JList<String> jstleftlist = new JList<>(str);
+		JList jstleftlist = new JList(str);
 		jstleftlist.setSelectedIndex(0);
 		jstleftlist.setFixedCellWidth(125);
 		JSplitPane waterjsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, jstleftlist, jsprightpanel);
@@ -2356,7 +2395,7 @@ public class InputForm extends JFrame {
 
 		String[] systemList = { "水量设计基础", "系统设计参数" };
 		JPanel systempanel = new JPanel();
-		JList<String> systemlist = new JList<String>(systemList);
+		JList systemlist = new JList(systemList);
 		systemlist.setFixedCellWidth(125);
 		systemlist.setSelectedIndex(0);
 		JSplitPane systemjsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, systemlist, systempanel);
@@ -2435,12 +2474,14 @@ public class InputForm extends JFrame {
 
 	public void initOrganism() {
 		if (jrbCOD.isSelected()) {
+			textFieldCOD_ROD.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
 			textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-		} else if (jrbOrganism.isSelected()) {
-			textFieldOrganismM1.setText(String.format("%.2f", msystem.streams.cods()[0].parMj));
-			textFieldOrganismC1.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-			textFieldOrganismM2.setText(String.format("%.2f", msystem.streams.cods()[1].parMj));
-			textFieldOrganismC2.setText(String.format("%.2f", msystem.streams.cods()[1].parcj));
+		} else if (jrbTOC.isSelected()) {
+			textFieldTOC_ROD.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+			textFieldTOC.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
+		} else if (jrbOther.isSelected()) {
+			textFieldother_ROD.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+			textFieldother.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
 		}
 	}
 
@@ -2473,14 +2514,31 @@ public class InputForm extends JFrame {
 		}
 	}
 
-	public void textfieldevent(JTextField jtf) {
+	public void textfieldparcj(JTextField jtf) {
 		try {
 			if (Double.parseDouble(jtf.getText()) < 0) {
 				JOptionPane.showMessageDialog(getContentPane(), "请输入不小于0的数值", "错误！", JOptionPane.ERROR_MESSAGE);
-				jtf.setText("0.00");
+			} else {
+				msystem.streams.cods()[0].parcj = Double.parseDouble(jtf.getText());
 			}
+			jtf.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
 		} catch (Exception e2) {
-			jtf.setText("0.00");
+			jtf.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
+		}
+	}
+
+	public void textfieldROD(JTextField jtf) {
+		try {
+			if (Double.parseDouble(jtf.getText()) > 1) {
+				JOptionPane.showMessageDialog(getContentPane(), "截留率是不大于1的数值", "错误！", JOptionPane.ERROR_MESSAGE);
+			} else if (Double.parseDouble(jtf.getText()) < 0) {
+				JOptionPane.showMessageDialog(getContentPane(), "截留率是不小于0的数值", "错误！", JOptionPane.ERROR_MESSAGE);
+			} else {
+				msystem.streams.cods()[0].parRCOD = Double.parseDouble(jtf.getText());
+			}
+			jtf.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+		} catch (Exception e2) {
+			jtf.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
 		}
 	}
 }

@@ -27,16 +27,16 @@ public class MBrane {
 	// 浓水流道截面积 m2
 	private double parAE;
 
-	// COD截留率
-	private double damCOD;
-	// <=42截留率
-	private double damMin;
-	// 截留率系数
-	private double damCoe;
-	// 截留率除数
-	private double damDiv;
-	// >=400截留率
-	private double damMax;
+	// // COD截留率
+	// private double damCOD;
+	// // <=42截留率
+	// private double damMin;
+	// // 截留率系数
+	// private double damCoe;
+	// // 截留率除数
+	// private double damDiv;
+	// // >=400截留率
+	// private double damMax;
 	// endregion
 
 	// region streams
@@ -114,7 +114,8 @@ public class MBrane {
 
 	// 离子透过率
 	private double parTrj(EIon ion) {
-		double temp = 1.0 / (2 * (1 - ipass.get(ion).Pj) / (ipass.get(ion).Pj + 2 * ipass.get(ion).Ds / (int) parJp) + 1);
+		double temp = 1.0
+				/ (2 * (1 - ipass.get(ion).Pj) / (ipass.get(ion).Pj + 2 * ipass.get(ion).Ds / (int) parJp) + 1);
 		if (Double.isInfinite(temp) || Double.isNaN(temp)) {
 			throw new ArithmeticException("离子透过率计算错误");
 		} else {
@@ -152,19 +153,19 @@ public class MBrane {
 				/ (parRjd(ion) + (1 - parRjd(ion)) * Math.exp(bj(ion) * parJp / parut()));
 	}
 
-	// COD透过系数
-	private double parRCOD(double Mj) {
-		if (Mj == 0) {
-			return damCOD;
-		}
-		if (Mj <= 42) {
-			return damMin;
-		}
-		if (Mj > 400) {
-			return damMax;
-		}
-		return 1 - damCoe * Math.exp(-Mj / damDiv);
-	}
+	// // COD透过系数
+	// private double parRCOD(double Mj) {
+	// if (Mj == 0) {
+	// return damCOD;
+	// }
+	// if (Mj <= 42) {
+	// return damMin;
+	// }
+	// if (Mj > 400) {
+	// return damMax;
+	// }
+	// return 1 - damCoe * Math.exp(-Mj / damDiv);
+	// }
 
 	// 通量 LMH
 	public double parFi() {
@@ -204,11 +205,6 @@ public class MBrane {
 			ipass.put(EIon.PO4, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.HPO4, new MBIon(0.0024, 0.0004, 0, 4771.2, -0.0024));
 			ipass.put(EIon.H2PO4, new MBIon(0.0024, 0.0004, 0, 4771.2, -0.0024));
-			this.damCOD = 0.7;
-			this.damMin = 0.05;
-			this.damCoe = 1.401;
-			this.damDiv = 110.44;
-			this.damMax = 0.95;
 		} else if (name.equals("DF30-8040(400)")) {
 			this.width = 8;
 			this.length = 40;
@@ -240,11 +236,6 @@ public class MBrane {
 			ipass.put(EIon.PO4, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.HPO4, new MBIon(0.0366, 0.5227, 0, 0, -0.1107));
 			ipass.put(EIon.H2PO4, new MBIon(0.0366, 0.5227, 0, 0, -0.1107));
-			this.damCOD = 0.7;
-			this.damMin = 0.05;
-			this.damCoe = 1.401;
-			this.damDiv = 110.44;
-			this.damMax = 0.95;
 		} else if (name.equals("DF304I-8040(400)")) {
 			this.width = 8;
 			this.length = 40;
@@ -261,26 +252,21 @@ public class MBrane {
 			ipass.put(EIon.NH4, new MBIon(0.7173, 2.5167, 0, 0, 0.7647));
 			ipass.put(EIon.Ca, new MBIon(0.4607, 5.0781, 0, 1891.3, 1.3815));
 			ipass.put(EIon.Mg, new MBIon(0.2911, 5.2535, 0, 667.1, 0.9228));
-			ipass.put(EIon.Ba,new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Ba, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.Sr, new MBIon(0.5, 0.5, 0, 0, 0));
-			ipass.put(EIon.Fe2,new MBIon(0.5, 0.5, 0, 0, 0));
-			ipass.put(EIon.Mn,new MBIon(0.5, 0.5, 0, 0, 0));
-			ipass.put(EIon.Fe3,new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Fe2, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Mn, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.Fe3, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.Al, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.NO3, new MBIon(1.0229, 4.5631, 0, 0, -1.4001));
 			ipass.put(EIon.F, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.Cl, new MBIon(0.9991, 1.4891, 0, 3765.9, -1.1274));
 			ipass.put(EIon.HCO3, new MBIon(0.2018, 13.9941, -130.5, 40784.2, -0.2625));
 			ipass.put(EIon.SO4, new MBIon(0.0045, 0.0039, 0, 2897.2, 0));
-			ipass.put(EIon.P,new MBIon(0.5, 0.5, 0, 0,0));
-			ipass.put(EIon.PO4,  new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.P, new MBIon(0.5, 0.5, 0, 0, 0));
+			ipass.put(EIon.PO4, new MBIon(0.5, 0.5, 0, 0, 0));
 			ipass.put(EIon.HPO4, new MBIon(0.0060, 0.0001, 0, 6676.6, 0));
 			ipass.put(EIon.H2PO4, new MBIon(0.0948, 0.4796, 0, 812.5, 0));
-			this.damCOD = 0.7;
-			this.damMin = 0.05;
-			this.damCoe = 1.401;
-			this.damDiv = 110.44;
-			this.damMax = 0.95;
 		} else {
 			throw new Exception("unsupported membrane model");
 		}
@@ -323,8 +309,8 @@ public class MBrane {
 					.parcj((1 - parYt() * parBj(ion) * parTrjd(ion)) / (1 - parYt()) * streamf.ion(ion).parcj());
 		}
 		for (MCOD c : streamf.cods()) {
-			streamp.cod(c.name).parcj = (1 - parRCOD(c.parMj)) * c.parcj;
-			streamc.cod(c.name).parcj = (1 - parYt() * (1 - parRCOD(c.parMj))) / (1 - parYt()) * c.parcj;
+			streamp.cod(c.name).parcj = (1 - c.parRCOD) * c.parcj;
+			streamc.cod(c.name).parcj = (1 - parYt() * (1 - c.parRCOD)) / (1 - parYt()) * c.parcj;
 		}
 		streamp.parP = parPpi;
 		streamc.parP = streamf.parP - parDPfc();

@@ -262,16 +262,23 @@ public class MStream {
 		for (EIon ion : EIon.values()) {
 			ions.put(ion, new MIon(ion));
 		}
-		codmode(true);
+		codmode(0);
 	}
 
-	public void codmode(boolean unique) {
+	public void codmode(int unique) {
 		cods.clear();
-		if (unique) {
-			cods.add(new MCOD("有机物"));
-		} else {
-			cods.add(new MCOD("有机物1"));
-			cods.add(new MCOD("有机物2"));
+		switch (unique) {
+		case 0:
+			cods.add(new MCOD("COD"));
+			break;
+		case 1:
+			cods.add(new MCOD("TOC"));
+			break;
+		case 2:
+			cods.add(new MCOD("其它物质"));
+			break;
+		default:
+			System.out.println("未知物质！");
 		}
 	}
 

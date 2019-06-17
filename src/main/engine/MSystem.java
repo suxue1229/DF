@@ -146,7 +146,6 @@ public class MSystem {
 					+ this.streamp.ion(EIon.HPO4).cp_p / this.streamp.ion(EIon.HPO4).parMj
 					+ this.streamp.ion(EIon.H2PO4).cp_p / this.streamp.ion(EIon.H2PO4).parMj) * 30.974;
 			this.streamp.updpH(streams.parmH2CO3());
-
 			MLogger.syslog(String.format("{RESULT} Q:%f", this.streamp.parQ));
 			// region step-4
 			if (this.streamp.parQ > 1.01 * pariQp) {

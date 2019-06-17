@@ -61,8 +61,8 @@ public class DisplayDiag extends JFrame {
 
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("系统报告输出", null, panel, null);
-		
-		tablesystemout = new JTable(msystem.section() + 1,11) {
+
+		tablesystemout = new JTable(msystem.section() + 1, 11) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
@@ -103,8 +103,8 @@ public class DisplayDiag extends JFrame {
 		tablesystemout.getTableHeader().setReorderingAllowed(false);
 		tablesystemout.getTableHeader().setVisible(false);
 		tablesystemout.setRowHeight(0, 30);
-		
-		table_para = new JTable(4,4) {
+
+		table_para = new JTable(4, 4) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
@@ -141,7 +141,7 @@ public class DisplayDiag extends JFrame {
 		heade_para.setPreferredSize(new Dimension(heade_1.getWidth(), 0));// 表头高度设置
 		table_para.getTableHeader().setReorderingAllowed(false);
 		table_para.getTableHeader().setVisible(false);
-		
+
 		JButton btnNewButton_2 = new JButton("输入参数导出");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			@Override
@@ -157,7 +157,7 @@ public class DisplayDiag extends JFrame {
 				}
 			}
 		});
-		
+
 		JButton btnNewButton_3 = new JButton("系统参数导出");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			@Override
@@ -173,32 +173,21 @@ public class DisplayDiag extends JFrame {
 				}
 			}
 		});
-		
+
 		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addComponent(scrollPane_para, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
+				gl_panel.createSequentialGroup().addContainerGap()
+						.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+								.addComponent(scrollPane_para, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 611,
+										Short.MAX_VALUE)
 						.addComponent(scrollPane_1, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
-						.addComponent(btnNewButton_2)
-						.addComponent(btnNewButton_3))
-					.addContainerGap())
-		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(scrollPane_para, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnNewButton_2)
-					.addGap(18)
-					.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 232, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnNewButton_3)
-					.addGap(40))
-		);
+						.addComponent(btnNewButton_2).addComponent(btnNewButton_3)).addContainerGap()));
+		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(Alignment.TRAILING,
+				gl_panel.createSequentialGroup().addContainerGap()
+						.addComponent(scrollPane_para, GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+						.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNewButton_2).addGap(18)
+						.addComponent(scrollPane_1, GroupLayout.PREFERRED_SIZE, 232, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNewButton_3).addGap(40)));
 		panel.setLayout(gl_panel);
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("水质报告输出", null, panel_1, null);
