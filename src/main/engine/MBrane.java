@@ -26,17 +26,6 @@ public class MBrane {
 	public double parSE;
 	// 浓水流道截面积 m2
 	private double parAE;
-
-	// // COD截留率
-	// private double damCOD;
-	// // <=42截留率
-	// private double damMin;
-	// // 截留率系数
-	// private double damCoe;
-	// // 截留率除数
-	// private double damDiv;
-	// // >=400截留率
-	// private double damMax;
 	// endregion
 
 	// region streams

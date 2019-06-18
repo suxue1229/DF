@@ -76,10 +76,9 @@ public class InputForm extends JFrame {
 			textFieldpariQp, textFieldpariQr, TextFieldpariQc;
 	private JLabel lblMpa_MPa2, lblMpa_2, lblMpa_MPa0;
 	private JPanel panelIon;
-	private JRadioButton jrbCOD;
-	private JRadioButton jrbOther;
-	private JRadioButton jrbTOC;
-	private ButtonGroup buttongroup;
+	private JLabel jrbCOD;
+	private JLabel jrbOther;
+	private JLabel jrbTOC;
 	private JTextField textFieldCOD_ROD;
 	private JTextField textFieldTOC_ROD;
 	private JTextField textFieldTOC;
@@ -1064,7 +1063,7 @@ public class InputForm extends JFrame {
 
 		// panel_2有机物信息面板
 		JPanel organismpanel = new JPanel();
-		jrbCOD = new JRadioButton("COD总量", true);
+		jrbCOD = new JLabel("COD总量");
 		JPanel panelCOD = new JPanel();
 		GridBagConstraints gbc_textField_11_1 = new GridBagConstraints();
 		gbc_textField_11_1.anchor = GridBagConstraints.NORTHWEST;
@@ -1132,8 +1131,8 @@ public class InputForm extends JFrame {
 		gbc_label_16_1.anchor = GridBagConstraints.WEST;
 		gbc_label_16_1.gridx = 8;
 		gbc_label_16_1.gridy = 5;
-		jrbOther = new JRadioButton("其它物质");
-		jrbTOC = new JRadioButton("TOC");
+		jrbOther = new JLabel("其它物质");
+		jrbTOC = new JLabel("TOC");
 
 		JPanel panelTOC = new JPanel();
 		GridBagLayout gbl_panelTOC = new GridBagLayout();
@@ -1151,18 +1150,18 @@ public class InputForm extends JFrame {
 		gbc_labelTOC_ROD.gridy = 1;
 		panelTOC.add(labelTOC_ROD, gbc_labelTOC_ROD);
 
-		textFieldTOC_ROD = new JTextField(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+		textFieldTOC_ROD = new JTextField(String.format("%.4f", msystem.streams.cods()[1].parRCOD));
 		textFieldTOC_ROD.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldROD(textFieldTOC_ROD);
+				textfieldROD(textFieldTOC_ROD,1);
 			}
 		});
 		textFieldTOC_ROD.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldROD(textFieldTOC_ROD);
+					textfieldROD(textFieldTOC_ROD,1);
 				}
 			}
 		});
@@ -1181,18 +1180,18 @@ public class InputForm extends JFrame {
 		gbc_labelTOC.gridy = 1;
 		panelTOC.add(labelTOC, gbc_labelTOC);
 
-		textFieldTOC = new JTextField(String.format("%.2f", msystem.streams.cods()[0].parcj));
+		textFieldTOC = new JTextField(String.format("%.2f", msystem.streams.cods()[1].parcj));
 		textFieldTOC.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldparcj(textFieldTOC);
+				textfieldparcj(textFieldTOC,1);
 			}
 		});
 		textFieldTOC.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldparcj(textFieldTOC);
+					textfieldparcj(textFieldTOC,1);
 				}
 			}
 		});
@@ -1227,18 +1226,18 @@ public class InputForm extends JFrame {
 		gbc_labelother_ROD.gridy = 1;
 		panelother.add(labelother_ROD, gbc_labelother_ROD);
 
-		textFieldother_ROD = new JTextField(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+		textFieldother_ROD = new JTextField(String.format("%.4f", msystem.streams.cods()[2].parRCOD));
 		textFieldother_ROD.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldROD(textFieldother_ROD);
+				textfieldROD(textFieldother_ROD,2);
 			}
 		});
 		textFieldother_ROD.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldROD(textFieldother_ROD);
+					textfieldROD(textFieldother_ROD,2);
 				}
 			}
 		});
@@ -1257,18 +1256,18 @@ public class InputForm extends JFrame {
 		gbc_labelother.gridy = 1;
 		panelother.add(labelother, gbc_labelother);
 
-		textFieldother = new JTextField(String.format("%.2f", msystem.streams.cods()[0].parcj));
+		textFieldother = new JTextField(String.format("%.2f", msystem.streams.cods()[2].parcj));
 		textFieldother.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldparcj(textFieldother);
+				textfieldparcj(textFieldother,2);
 			}
 		});
 		textFieldother.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldparcj(textFieldother);
+					textfieldparcj(textFieldother,2);
 				}
 			}
 		});
@@ -1340,14 +1339,14 @@ public class InputForm extends JFrame {
 		textFieldCOD_ROD.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldROD(textFieldCOD_ROD);
+				textfieldROD(textFieldCOD_ROD,0);
 			}
 		});
 		textFieldCOD_ROD.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldROD(textFieldCOD_ROD);
+					textfieldROD(textFieldCOD_ROD,0);
 				}
 			}
 		});
@@ -1368,14 +1367,14 @@ public class InputForm extends JFrame {
 		textFieldCOD.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldparcj(textFieldCOD);
+				textfieldparcj(textFieldCOD,0);
 			}
 		});
 		textFieldCOD.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldparcj(textFieldCOD);
+					textfieldparcj(textFieldCOD,0);
 				}
 			}
 		});
@@ -1393,76 +1392,6 @@ public class InputForm extends JFrame {
 		gbc_label_COD_mgl.gridy = 1;
 		panelCOD.add(label_COD_mgl, gbc_label_COD_mgl);
 
-		buttongroup = new ButtonGroup();
-		buttongroup.add(jrbCOD);
-		buttongroup.add(jrbTOC);
-		buttongroup.add(jrbOther);
-
-		for (int j = 0; j < panelCOD.getComponentCount(); j++) {
-			panelCOD.getComponent(j).setEnabled(true);
-		}
-		for (int j = 0; j < panelTOC.getComponentCount(); j++) {
-			panelTOC.getComponent(j).setEnabled(false);
-		}
-		for (int j = 0; j < panelother.getComponentCount(); j++) {
-			panelother.getComponent(j).setEnabled(false);
-		}
-
-		// COD
-		jrbCOD.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (jrbCOD.isSelected()) {
-					msystem.streams.codmode(0);
-					for (int j = 0; j < panelCOD.getComponentCount(); j++) {
-						panelCOD.getComponent(j).setEnabled(true);
-					}
-					for (int j = 0; j < panelTOC.getComponentCount(); j++) {
-						panelTOC.getComponent(j).setEnabled(false);
-					}
-					for (int j = 0; j < panelother.getComponentCount(); j++) {
-						panelother.getComponent(j).setEnabled(false);
-					}
-				}
-			}
-		});
-		// TOC
-		jrbTOC.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (jrbTOC.isSelected()) {
-					msystem.streams.codmode(1);
-					for (int j = 0; j < panelCOD.getComponentCount(); j++) {
-						panelCOD.getComponent(j).setEnabled(false);
-					}
-					for (int j = 0; j < panelTOC.getComponentCount(); j++) {
-						panelTOC.getComponent(j).setEnabled(true);
-					}
-					for (int j = 0; j < panelother.getComponentCount(); j++) {
-						panelother.getComponent(j).setEnabled(false);
-					}
-				}
-			}
-		});
-
-		// 其它物质
-		jrbOther.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (jrbOther.isSelected()) {
-					msystem.streams.codmode(2);
-					for (int j = 0; j < panelCOD.getComponentCount(); j++) {
-						panelCOD.getComponent(j).setEnabled(false);
-					}
-					for (int j = 0; j < panelTOC.getComponentCount(); j++) {
-						panelTOC.getComponent(j).setEnabled(false);
-					}
-					for (int j = 0; j < panelother.getComponentCount(); j++) {
-						panelother.getComponent(j).setEnabled(true);
-					}
-				}
-			}
-		});
 		JPanel jsprightpanel = new JPanel();
 		String[] str = { "进水参数", "离子信息", "有机物信息" };
 		JList jstleftlist = new JList(str);
@@ -2473,16 +2402,12 @@ public class InputForm extends JFrame {
 	}
 
 	public void initOrganism() {
-		if (jrbCOD.isSelected()) {
 			textFieldCOD_ROD.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
 			textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-		} else if (jrbTOC.isSelected()) {
-			textFieldTOC_ROD.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
-			textFieldTOC.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-		} else if (jrbOther.isSelected()) {
-			textFieldother_ROD.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
-			textFieldother.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-		}
+			textFieldTOC_ROD.setText(String.format("%.4f", msystem.streams.cods()[1].parRCOD));
+			textFieldTOC.setText(String.format("%.2f", msystem.streams.cods()[1].parcj));
+			textFieldother_ROD.setText(String.format("%.4f", msystem.streams.cods()[2].parRCOD));
+			textFieldother.setText(String.format("%.2f", msystem.streams.cods()[2].parcj));
 	}
 
 	public void initwaterdesign() {
@@ -2514,31 +2439,31 @@ public class InputForm extends JFrame {
 		}
 	}
 
-	public void textfieldparcj(JTextField jtf) {
+	public void textfieldparcj(JTextField jtf,int i) {
 		try {
 			if (Double.parseDouble(jtf.getText()) < 0) {
 				JOptionPane.showMessageDialog(getContentPane(), "请输入不小于0的数值", "错误！", JOptionPane.ERROR_MESSAGE);
 			} else {
-				msystem.streams.cods()[0].parcj = Double.parseDouble(jtf.getText());
+				msystem.streams.cods()[i].parcj = Double.parseDouble(jtf.getText());
 			}
-			jtf.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
+			jtf.setText(String.format("%.2f", msystem.streams.cods()[i].parcj));
 		} catch (Exception e2) {
-			jtf.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
+			jtf.setText(String.format("%.2f", msystem.streams.cods()[i].parcj));
 		}
 	}
 
-	public void textfieldROD(JTextField jtf) {
+	public void textfieldROD(JTextField jtf,int i) {
 		try {
 			if (Double.parseDouble(jtf.getText()) > 1) {
 				JOptionPane.showMessageDialog(getContentPane(), "截留率是不大于1的数值", "错误！", JOptionPane.ERROR_MESSAGE);
 			} else if (Double.parseDouble(jtf.getText()) < 0) {
 				JOptionPane.showMessageDialog(getContentPane(), "截留率是不小于0的数值", "错误！", JOptionPane.ERROR_MESSAGE);
 			} else {
-				msystem.streams.cods()[0].parRCOD = Double.parseDouble(jtf.getText());
+				msystem.streams.cods()[i].parRCOD = Double.parseDouble(jtf.getText());
 			}
-			jtf.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+			jtf.setText(String.format("%.4f", msystem.streams.cods()[i].parRCOD));
 		} catch (Exception e2) {
-			jtf.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
+			jtf.setText(String.format("%.4f", msystem.streams.cods()[i].parRCOD));
 		}
 	}
 }
