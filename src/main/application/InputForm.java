@@ -48,6 +48,8 @@ import javax.swing.table.TableModel;
 
 import engine.EIon;
 import engine.MSystem;
+import java.awt.Label;
+import java.awt.Font;
 
 public class InputForm extends JFrame {
 
@@ -90,6 +92,21 @@ public class InputForm extends JFrame {
 	private GridBagConstraints gbc_textFieldother_ROD;
 	private GridBagConstraints gbc_labelother;
 	private GridBagConstraints gbc_label_other_mgl;
+	private GridBagConstraints gbc_label4_1;
+	private JTextField textField4_1_1;
+	private JTextField textField4_1_2;
+	private JTextField textField4_1_3;
+	private JTextField textField4_2_1;
+	private JTextField textField4_2_2;
+	private JTextField textField4_2_3;
+	private JTextField textField4_3_1;
+	private JTextField textField4_3_2;
+	private JTextField textField4_3_3;
+	private JTextField textField4_4_1;
+	private JTextField textField4_4_2;
+	private JTextField textField4_4_3;
+	private JTextField textField4_5_1;
+	private JTextField textField4_6_1;
 
 	/**
 	 * Create the application.
@@ -165,12 +182,12 @@ public class InputForm extends JFrame {
 		panelProcess.setLayout(gbl_panel);
 
 		JLabel labelProName = new JLabel("项目名称");
-		GridBagConstraints gbc_label = new GridBagConstraints();
-		gbc_label.anchor = GridBagConstraints.WEST;
-		gbc_label.insets = new Insets(0, 0, 5, 5);
-		gbc_label.gridx = 3;
-		gbc_label.gridy = 1;
-		panelProcess.add(labelProName, gbc_label);
+		GridBagConstraints gbc_label_3 = new GridBagConstraints();
+		gbc_label_3.anchor = GridBagConstraints.WEST;
+		gbc_label_3.insets = new Insets(0, 0, 5, 5);
+		gbc_label_3.gridx = 3;
+		gbc_label_3.gridy = 1;
+		panelProcess.add(labelProName, gbc_label_3);
 		textFieldProName = new JTextField(msystem.name);
 		textFieldProName.setColumns(10);
 		textFieldProName.addFocusListener(new FocusAdapter() {
@@ -187,20 +204,20 @@ public class InputForm extends JFrame {
 				}
 			}
 		});
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.gridx = 4;
-		gbc_textField.gridy = 1;
-		panelProcess.add(textFieldProName, gbc_textField);
+		GridBagConstraints gbc_textField4_1_1 = new GridBagConstraints();
+		gbc_textField4_1_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_1_1.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_1_1.gridx = 4;
+		gbc_textField4_1_1.gridy = 1;
+		panelProcess.add(textFieldProName, gbc_textField4_1_1);
 
 		JLabel labelDesigner = new JLabel("设计者");
-		GridBagConstraints gbc_label_1 = new GridBagConstraints();
-		gbc_label_1.anchor = GridBagConstraints.WEST;
-		gbc_label_1.insets = new Insets(0, 0, 5, 5);
-		gbc_label_1.gridx = 3;
-		gbc_label_1.gridy = 2;
-		panelProcess.add(labelDesigner, gbc_label_1);
+		GridBagConstraints gbc_label4_1_1 = new GridBagConstraints();
+		gbc_label4_1_1.anchor = GridBagConstraints.WEST;
+		gbc_label4_1_1.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_1_1.gridx = 3;
+		gbc_label4_1_1.gridy = 2;
+		panelProcess.add(labelDesigner, gbc_label4_1_1);
 		textFieldDesigner = new JTextField(msystem.designer);
 		textFieldDesigner.setColumns(10);
 		textFieldDesigner.addFocusListener(new FocusAdapter() {
@@ -745,7 +762,18 @@ public class InputForm extends JFrame {
 			tablemodel.setValueAt(anion[i], i, 4);
 		}
 		// 离子表格初始化
-		inittableIon();
+		for (int i = 0; i < 11; i++) {
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parcj()), i, 1);
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i, 2);
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parzj()), i, 3);
+		}
+		for (int i = 11; i < EIon.values().length - 3; i++) {
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parcj()), i - 11, 5);
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i - 11, 6);
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parzj()), i - 11, 7);
+		}
+		tableIon.setValueAt(df2.format(msystem.streams.parqC()), 11, 3);
+		tableIon.setValueAt(df2.format(msystem.streams.parqA()), 11, 7);
 		tableIon.setCellSelectionEnabled(true);// 使得表格的选取以cell为单位而不是以列为单位
 		tableIon.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1408,21 +1436,18 @@ public class InputForm extends JFrame {
 					waterjsp.remove(waterjsp.getRightComponent());
 					jsprightpanel.remove(panelIon);
 					jsprightpanel.remove(organismpanel);
-					initwaterpara();
 					jsprightpanel.add(panelWater);
 					waterjsp.add(jsprightpanel, JSplitPane.RIGHT);
 				} else if (jstleftlist.getSelectedIndex() == 1) {
 					waterjsp.remove(waterjsp.getRightComponent());
 					jsprightpanel.remove(panelWater);
 					jsprightpanel.remove(organismpanel);
-					inittableIon();
 					jsprightpanel.add(panelIon);
 					waterjsp.add(jsprightpanel, JSplitPane.RIGHT);
 				} else if (jstleftlist.getSelectedIndex() == 2) {
 					waterjsp.remove(waterjsp.getRightComponent());
 					jsprightpanel.remove(panelWater);
 					jsprightpanel.remove(panelIon);
-					initOrganism();
 					jsprightpanel.add(organismpanel);
 					waterjsp.add(jsprightpanel, JSplitPane.RIGHT);
 				}
@@ -2335,13 +2360,11 @@ public class InputForm extends JFrame {
 				if (systemlist.getSelectedIndex() == 0) {
 					systemjsp.remove(systemjsp.getRightComponent());
 					systempanel.remove(panel_32);
-					initwaterdesign();
 					systempanel.add(panel_30);
 					systemjsp.add(systempanel, JSplitPane.RIGHT);
 				} else if (systemlist.getSelectedIndex() == 1) {
 					systemjsp.remove(systemjsp.getRightComponent());
 					systempanel.remove(panel_30);
-					inittablessystem();
 					systempanel.add(panel_32);
 					systemjsp.add(systempanel, JSplitPane.RIGHT);
 				}
@@ -2357,6 +2380,547 @@ public class InputForm extends JFrame {
 				gl_panelSystem.createParallelGroup(Alignment.LEADING).addGroup(gl_panelSystem.createSequentialGroup()
 						.addComponent(systemjsp, GroupLayout.PREFERRED_SIZE, 394, Short.MAX_VALUE).addContainerGap()));
 		panelSystem.setLayout(gl_panelSystem);
+		
+		
+		JPanel panelPower = new JPanel();
+		tabbedPane.addTab("电耗计算", null, panelPower, null);
+		
+		JPanel panel_40 = new JPanel();
+		GridBagLayout gbl_panel_40 = new GridBagLayout();
+		gbl_panel_40.columnWidths = new int[] { 40, 100, 80, 100, 80, 100 };
+		gbl_panel_40.rowHeights = new int[] { 40, 50, 40, 50, 40, 50,40,50};
+		gbl_panel_40.columnWeights = new double[] { 1.0, 1.0, 1.0, 1.0,1.0,1.0 };
+		gbl_panel_40.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0,1.0,1.0};
+		panel_40.setLayout(gbl_panel_40);
+		
+		JLabel label4_1 = new JLabel("低压泵");
+		label4_1.setFont(new Font("宋体", Font.PLAIN, 18));
+		label4_1.setForeground(Color.BLACK);
+		GridBagConstraints gbc_label_di;
+		gbc_label_di = new GridBagConstraints();
+		gbc_label_di.insets = new Insets(0, 0, 5, 5);
+		gbc_label_di.gridx = 0;
+		gbc_label_di.gridy = 0;
+		panel_40.add(label4_1, gbc_label_di);
+		
+		JLabel label4_1_1 = new JLabel("泵效率");
+		GridBagConstraints gbc_label4_1_1_di = new GridBagConstraints();
+		gbc_label4_1_1_di.anchor = GridBagConstraints.EAST;
+		gbc_label4_1_1_di.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_1_1_di.gridx = 0;
+		gbc_label4_1_1_di.gridy = 1;
+		panel_40.add(label4_1_1, gbc_label4_1_1_di);
+		
+		textField4_1_1 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_PJ));
+		textField4_1_1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldPJ(textField4_1_1,0);
+			}
+		});
+		textField4_1_1.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldPJ(textField4_1_1,0);
+				}
+			}
+		});
+		GridBagConstraints gbc_textField4_1_1_di = new GridBagConstraints();
+		gbc_textField4_1_1_di.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_1_1_di.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_1_1_di.gridx = 1;
+		gbc_textField4_1_1_di.gridy = 1;
+		panel_40.add(textField4_1_1, gbc_textField4_1_1_di);
+		textField4_1_1.setColumns(10);
+		
+		JLabel label4_1_2 = new JLabel("电机效率");
+		GridBagConstraints gbc_label4_1_2 = new GridBagConstraints();
+		gbc_label4_1_2.anchor = GridBagConstraints.EAST;
+		gbc_label4_1_2.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_1_2.gridx = 2;
+		gbc_label4_1_2.gridy = 1;
+		panel_40.add(label4_1_2, gbc_label4_1_2);
+		
+		textField4_1_2 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_MJ));
+		textField4_1_2.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldMJ(textField4_1_2,0);
+			}
+		});
+		textField4_1_2.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldMJ(textField4_1_2,0);
+				}
+			}
+		});
+		GridBagConstraints gbc_textField4_1_2 = new GridBagConstraints();
+		gbc_textField4_1_2.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_1_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_1_2.gridx = 3;
+		gbc_textField4_1_2.gridy = 1;
+		panel_40.add(textField4_1_2, gbc_textField4_1_2);
+		textField4_1_2.setColumns(10);
+		
+		JLabel label4_1_3 = new JLabel("变频效率");
+		GridBagConstraints gbc_label4_1_3 = new GridBagConstraints();
+		gbc_label4_1_3.anchor = GridBagConstraints.EAST;
+		gbc_label4_1_3.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_1_3.gridx = 4;
+		gbc_label4_1_3.gridy = 1;
+		panel_40.add(label4_1_3, gbc_label4_1_3);
+		
+		textField4_1_3 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_VFD));
+		textField4_1_3.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldVFD(textField4_1_3,0);
+			}
+		});
+		textField4_1_3.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldVFD(textField4_1_3,0);
+				}
+			}
+		});
+		GridBagConstraints gbc_textField4_1_3 = new GridBagConstraints();
+		gbc_textField4_1_3.insets = new Insets(0, 0, 5, 0);
+		gbc_textField4_1_3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_1_3.gridx = 5;
+		gbc_textField4_1_3.gridy = 1;
+		panel_40.add(textField4_1_3, gbc_textField4_1_3);
+		textField4_1_3.setColumns(10);
+		
+		JLabel label4_2 = new JLabel("高压泵");
+		label4_2.setFont(new Font("宋体", Font.PLAIN, 18));
+		GridBagConstraints gbc_label4_2 = new GridBagConstraints();
+		gbc_label4_2.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_2.gridx = 0;
+		gbc_label4_2.gridy = 2;
+		panel_40.add(label4_2, gbc_label4_2);
+		
+		JLabel label4_2_1 = new JLabel("泵效率");
+		GridBagConstraints gbc_label4_2_1 = new GridBagConstraints();
+		gbc_label4_2_1.anchor = GridBagConstraints.EAST;
+		gbc_label4_2_1.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_2_1.gridx = 0;
+		gbc_label4_2_1.gridy = 3;
+		panel_40.add(label4_2_1, gbc_label4_2_1);
+		
+		textField4_2_1 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_PJ));
+		textField4_2_1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldPJ(textField4_2_1,1);
+			}
+		});
+		textField4_2_1.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldPJ(textField4_2_1,1);
+				}
+			}
+		});
+		textField4_2_1.setColumns(10);
+		GridBagConstraints gbc_textField4_2_1 = new GridBagConstraints();
+		gbc_textField4_2_1.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_2_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_2_1.gridx = 1;
+		gbc_textField4_2_1.gridy = 3;
+		panel_40.add(textField4_2_1, gbc_textField4_2_1);
+		
+		JLabel label4_2_2 = new JLabel("电机效率");
+		GridBagConstraints gbc_label4_2_2 = new GridBagConstraints();
+		gbc_label4_2_2.anchor = GridBagConstraints.EAST;
+		gbc_label4_2_2.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_2_2.gridx = 2;
+		gbc_label4_2_2.gridy = 3;
+		panel_40.add(label4_2_2, gbc_label4_2_2);
+		
+		textField4_2_2 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_MJ));
+		textField4_2_2.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldMJ(textField4_2_2,1);
+			}
+		});
+		textField4_2_2.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldMJ(textField4_2_2,1);
+				}
+			}
+		});
+		textField4_2_2.setColumns(10);
+		GridBagConstraints gbc_textField4_2_2 = new GridBagConstraints();
+		gbc_textField4_2_2.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_2_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_2_2.gridx = 3;
+		gbc_textField4_2_2.gridy = 3;
+		panel_40.add(textField4_2_2, gbc_textField4_2_2);
+		
+		JLabel label4_2_3 = new JLabel("变频效率");
+		GridBagConstraints gbc_label4_2_3 = new GridBagConstraints();
+		gbc_label4_2_3.anchor = GridBagConstraints.EAST;
+		gbc_label4_2_3.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_2_3.gridx = 4;
+		gbc_label4_2_3.gridy = 3;
+		panel_40.add(label4_2_3, gbc_label4_2_3);
+		
+		textField4_2_3 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_VFD));
+		textField4_2_3.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldVFD(textField4_2_3,1);
+			}
+		});
+		textField4_2_3.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldVFD(textField4_2_3,1);
+				}
+			}
+		});
+		textField4_2_3.setColumns(10);
+		GridBagConstraints gbc_textField4_2_3 = new GridBagConstraints();
+		gbc_textField4_2_3.insets = new Insets(0, 0, 5, 0);
+		gbc_textField4_2_3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_2_3.gridx = 5;
+		gbc_textField4_2_3.gridy = 3;
+		panel_40.add(textField4_2_3, gbc_textField4_2_3);
+		
+		JLabel label4_3 = new JLabel("增压泵");
+		label4_3.setFont(new Font("宋体", Font.PLAIN, 18));
+		GridBagConstraints gbc_label4_3 = new GridBagConstraints();
+		gbc_label4_3.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_3.gridx = 0;
+		gbc_label4_3.gridy = 4;
+		panel_40.add(label4_3, gbc_label4_3);
+		
+		JLabel label4_3_1 = new JLabel("泵效率");
+		GridBagConstraints gbc_label4_3_1 = new GridBagConstraints();
+		gbc_label4_3_1.anchor = GridBagConstraints.EAST;
+		gbc_label4_3_1.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_3_1.gridx = 0;
+		gbc_label4_3_1.gridy = 5;
+		panel_40.add(label4_3_1, gbc_label4_3_1);
+		
+		textField4_3_1 = new JTextField(String.format("%.2f", msystem.pumps()[2].parη_PJ));
+		textField4_3_1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldPJ(textField4_3_1,2);
+			}
+		});
+		textField4_3_1.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldPJ(textField4_3_1,2);
+				}
+			}
+		});
+		textField4_3_1.setColumns(10);
+		GridBagConstraints gbc_textField4_3_1 = new GridBagConstraints();
+		gbc_textField4_3_1.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_3_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_3_1.gridx = 1;
+		gbc_textField4_3_1.gridy = 5;
+		panel_40.add(textField4_3_1, gbc_textField4_3_1);
+		
+		JLabel label4_3_2 = new JLabel("电机效率");
+		GridBagConstraints gbc_label4_3_2 = new GridBagConstraints();
+		gbc_label4_3_2.anchor = GridBagConstraints.EAST;
+		gbc_label4_3_2.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_3_2.gridx = 2;
+		gbc_label4_3_2.gridy = 5;
+		panel_40.add(label4_3_2, gbc_label4_3_2);
+		
+		textField4_3_2 = new JTextField(String.format("%.2f", msystem.pumps()[2].parη_MJ));
+		textField4_3_2.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldMJ(textField4_3_2,2);
+			}
+		});
+		textField4_3_2.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldMJ(textField4_3_2,2);
+				}
+			}
+		});
+		textField4_3_2.setColumns(10);
+		GridBagConstraints gbc_textField4_3_2 = new GridBagConstraints();
+		gbc_textField4_3_2.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_3_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_3_2.gridx = 3;
+		gbc_textField4_3_2.gridy = 5;
+		panel_40.add(textField4_3_2, gbc_textField4_3_2);
+		
+		JLabel label4_3_3 = new JLabel("变频效率");
+		GridBagConstraints gbc_label4_3_3 = new GridBagConstraints();
+		gbc_label4_3_3.anchor = GridBagConstraints.EAST;
+		gbc_label4_3_3.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_3_3.gridx = 4;
+		gbc_label4_3_3.gridy = 5;
+		panel_40.add(label4_3_3, gbc_label4_3_3);
+		
+		textField4_3_3 = new JTextField(String.format("%.2f", msystem.pumps()[2].parη_VFD));
+		textField4_3_3.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldVFD(textField4_3_3,2);
+			}
+		});
+		textField4_3_3.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldVFD(textField4_3_3,2);
+				}
+			}
+		});
+		textField4_3_3.setColumns(10);
+		GridBagConstraints gbc_textField4_3_3 = new GridBagConstraints();
+		gbc_textField4_3_3.insets = new Insets(0, 0, 5, 0);
+		gbc_textField4_3_3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_3_3.gridx = 5;
+		gbc_textField4_3_3.gridy = 5;
+		panel_40.add(textField4_3_3, gbc_textField4_3_3);
+		
+		JLabel label4_4 = new JLabel("回流泵");
+		label4_4.setFont(new Font("宋体", Font.PLAIN, 18));
+		GridBagConstraints gbc_label4_4 = new GridBagConstraints();
+		gbc_label4_4.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_4.gridx = 0;
+		gbc_label4_4.gridy = 6;
+		panel_40.add(label4_4, gbc_label4_4);
+		
+		JLabel label4_4_1 = new JLabel("泵效率");
+		GridBagConstraints gbc_label4_4_1 = new GridBagConstraints();
+		gbc_label4_4_1.anchor = GridBagConstraints.EAST;
+		gbc_label4_4_1.insets = new Insets(0, 0, 0, 5);
+		gbc_label4_4_1.gridx = 0;
+		gbc_label4_4_1.gridy = 7;
+		panel_40.add(label4_4_1, gbc_label4_4_1);
+		
+		textField4_4_1 = new JTextField(String.format("%.2f", msystem.pumps()[3].parη_PJ));
+		textField4_4_1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldPJ(textField4_4_1,3);
+			}
+		});
+		textField4_4_1.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldPJ(textField4_4_1,3);
+				}
+			}
+		});
+		textField4_4_1.setColumns(10);
+		GridBagConstraints gbc_textField4_4_1 = new GridBagConstraints();
+		gbc_textField4_4_1.insets = new Insets(0, 0, 0, 5);
+		gbc_textField4_4_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_4_1.gridx = 1;
+		gbc_textField4_4_1.gridy = 7;
+		panel_40.add(textField4_4_1, gbc_textField4_4_1);
+		
+		JLabel label4_4_2 = new JLabel("电机效率");
+		GridBagConstraints gbc_label4_4_2 = new GridBagConstraints();
+		gbc_label4_4_2.anchor = GridBagConstraints.EAST;
+		gbc_label4_4_2.insets = new Insets(0, 0, 0, 5);
+		gbc_label4_4_2.gridx = 2;
+		gbc_label4_4_2.gridy = 7;
+		panel_40.add(label4_4_2, gbc_label4_4_2);
+		
+		textField4_4_2 = new JTextField(String.format("%.2f", msystem.pumps()[3].parη_MJ));
+		textField4_4_2.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldMJ(textField4_4_2,3);
+			}
+		});
+		textField4_4_2.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldMJ(textField4_4_2,3);
+				}
+			}
+		});
+		textField4_4_2.setColumns(10);
+		GridBagConstraints gbc_textField4_4_2 = new GridBagConstraints();
+		gbc_textField4_4_2.insets = new Insets(0, 0, 0, 5);
+		gbc_textField4_4_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_4_2.gridx = 3;
+		gbc_textField4_4_2.gridy = 7;
+		panel_40.add(textField4_4_2, gbc_textField4_4_2);
+		
+		JLabel label4_4_3 = new JLabel("变频效率");
+		GridBagConstraints gbc_label4_4_3 = new GridBagConstraints();
+		gbc_label4_4_3.anchor = GridBagConstraints.EAST;
+		gbc_label4_4_3.insets = new Insets(0, 0, 0, 5);
+		gbc_label4_4_3.gridx = 4;
+		gbc_label4_4_3.gridy = 7;
+		panel_40.add(label4_4_3, gbc_label4_4_3);
+		
+		textField4_4_3 = new JTextField(String.format("%.2f", msystem.pumps()[3].parη_VFD));
+		textField4_4_3.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				textfieldVFD(textField4_4_3,3);
+			}
+		});
+		textField4_4_3.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					textfieldVFD(textField4_4_3,3);
+				}
+			}
+		});
+		textField4_4_3.setColumns(10);
+		GridBagConstraints gbc_textField4_4_3 = new GridBagConstraints();
+		gbc_textField4_4_3.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_4_3.gridx = 5;
+		gbc_textField4_4_3.gridy = 7;
+		panel_40.add(textField4_4_3, gbc_textField4_4_3);
+		
+		JPanel panel_42 = new JPanel();
+		panel_42.setForeground(Color.BLACK);
+		GridBagLayout gbl_panel_42 = new GridBagLayout();
+		gbl_panel_42.columnWidths = new int[] { 40, 98, 150,40,98 };
+		gbl_panel_42.rowHeights = new int[] { 40, 60, 60, 60, 40, 50,40,50};
+		gbl_panel_42.columnWeights = new double[] { 1.0, 1.0, 1.0,1.0,1.0 };
+		gbl_panel_42.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0,1.0,1.0};
+		panel_42.setLayout(gbl_panel_42);
+		
+		
+		
+		String[] powerList = { "泵效率参数", "电费和压力参数" };
+		JPanel powerpanel = new JPanel();
+		JList powerlist = new JList(powerList);
+		powerlist.setFixedCellWidth(125);
+		powerlist.setSelectedIndex(0);
+		JSplitPane powerjsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, powerlist, powerpanel);
+		powerpanel.add(panel_40);
+		
+		JLabel label4_5 = new JLabel("电费单位成本");
+		GridBagConstraints gbc_label4_5 = new GridBagConstraints();
+		gbc_label4_5.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_5.gridx = 1;
+		gbc_label4_5.gridy = 2;
+		panel_42.add(label4_5, gbc_label4_5);
+		
+		textField4_5_1 = new JTextField(String.format("%.2f", msystem.e));
+		textField4_5_1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				msystem.e = Double.parseDouble(textField4_5_1.getText());
+				textField4_5_1.setText(String.format("%.2f", msystem.e));
+			}
+		});
+		textField4_5_1.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					msystem.e = Double.parseDouble(textField4_5_1.getText());
+					textField4_5_1.setText(String.format("%.2f", msystem.e));
+				}
+			}
+		});
+		GridBagConstraints gbc_textField4_5_1 = new GridBagConstraints();
+		gbc_textField4_5_1.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_5_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_5_1.gridx = 2;
+		gbc_textField4_5_1.gridy = 2;
+		panel_42.add(textField4_5_1, gbc_textField4_5_1);
+		textField4_5_1.setColumns(10);
+		
+		JLabel label4_5_1 = new JLabel("元/kWh");
+		GridBagConstraints gbc_label4_5_1 = new GridBagConstraints();
+		gbc_label4_5_1.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_5_1.gridx = 3;
+		gbc_label4_5_1.gridy = 2;
+		panel_42.add(label4_5_1, gbc_label4_5_1);
+		
+		JLabel label4_6 = new JLabel("低压泵压力");
+		GridBagConstraints gbc_label4_6 = new GridBagConstraints();
+		gbc_label4_6.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_6.gridx = 1;
+		gbc_label4_6.gridy = 3;
+		panel_42.add(label4_6, gbc_label4_6);
+		
+		textField4_6_1 = new JTextField(String.format("%.2f", msystem.pumps()[0].parP));
+		textField4_6_1.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				msystem.pumps()[0].parP = Double.parseDouble(textField4_6_1.getText());
+				textField4_6_1.setText(String.format("%.2f", msystem.pumps()[0].parP));
+			}
+		});
+		textField4_6_1.addKeyListener(new java.awt.event.KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
+				{
+					msystem.pumps()[0].parP = Double.parseDouble(textField4_6_1.getText());
+					textField4_6_1.setText(String.format("%.2f", msystem.pumps()[0].parP));
+				}
+			}
+		});
+		GridBagConstraints gbc_textField4_6_1 = new GridBagConstraints();
+		gbc_textField4_6_1.insets = new Insets(0, 0, 5, 5);
+		gbc_textField4_6_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField4_6_1.gridx = 2;
+		gbc_textField4_6_1.gridy = 3;
+		panel_42.add(textField4_6_1, gbc_textField4_6_1);
+		textField4_6_1.setColumns(10);
+		
+		JLabel label4_6_1 = new JLabel("MPa");
+		GridBagConstraints gbc_label4_6_1 = new GridBagConstraints();
+		gbc_label4_6_1.insets = new Insets(0, 0, 5, 5);
+		gbc_label4_6_1.gridx = 3;
+		gbc_label4_6_1.gridy = 3;
+		panel_42.add(label4_6_1, gbc_label4_6_1);
+		powerlist.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (powerlist.getSelectedIndex() == 0) {
+					powerjsp.remove(powerjsp.getRightComponent());
+					powerpanel.remove(panel_42);
+					powerpanel.add(panel_40);
+					powerjsp.add(powerpanel, JSplitPane.RIGHT);
+				} else if (powerlist.getSelectedIndex() == 1) {
+					powerjsp.remove(powerjsp.getRightComponent());
+					powerpanel.remove(panel_40);
+					powerpanel.add(panel_42);
+					powerjsp.add(powerpanel, JSplitPane.RIGHT);
+				}
+			}
+		});
+		powerjsp.setDividerSize(1);
+		powerjsp.setEnabled(false);
+
+		GroupLayout gl_panelPower = new GroupLayout(panelPower);
+		gl_panelPower.setHorizontalGroup(gl_panelPower.createParallelGroup(Alignment.LEADING).addComponent(powerjsp,
+				GroupLayout.DEFAULT_SIZE, 662, Short.MAX_VALUE));
+		gl_panelPower.setVerticalGroup(
+				gl_panelPower.createParallelGroup(Alignment.LEADING).addGroup(gl_panelPower.createSequentialGroup()
+						.addComponent(powerjsp, GroupLayout.PREFERRED_SIZE, 394, Short.MAX_VALUE).addContainerGap()));
+		panelPower.setLayout(gl_panelPower);
+		
 		getContentPane().setLayout(groupLayout);
 		// 按钮事件
 		button.addActionListener(new ActionListener() {
@@ -2371,72 +2935,6 @@ public class InputForm extends JFrame {
 				}
 			}
 		});
-	}
-
-	public void initwaterpara() {
-		textFieldTemperature.setText((String.format("%.1f", msystem.streams.parT())));// 温度
-		textFieldpH.setText((String.format("%.2f", msystem.streams.parpH())));// pH
-		// 电导率、离子强度、渗透压
-		TextFieldconductivity.setText(String.format("%.2f", msystem.streams.parS()));// 电导率
-		TextFieldIon.setText((String.format("%.3f", msystem.streams.paru())));// 离子强度
-		TextFieldOsmoticPressure.setText((String.format("%.2f", msystem.streams.parpif())));// 渗透压
-		// 碱度
-		textFieldalkalinity.setText((String.format("%.1f", msystem.streams.parcjd())));
-		// TDS
-		textFieldTDS.setText(String.format("%.1f", msystem.streams.tds()));
-	}
-
-	public void inittableIon() {
-		for (int i = 0; i < 11; i++) {
-			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parcj()), i, 1);
-			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i, 2);
-			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parzj()), i, 3);
-		}
-		for (int i = 11; i < EIon.values().length - 3; i++) {
-			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parcj()), i - 11, 5);
-			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i - 11, 6);
-			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parzj()), i - 11, 7);
-		}
-		tableIon.setValueAt(df2.format(msystem.streams.parqC()), 11, 3);
-		tableIon.setValueAt(df2.format(msystem.streams.parqA()), 11, 7);
-	}
-
-	public void initOrganism() {
-			textFieldCOD_ROD.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));
-			textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));
-			textFieldTOC_ROD.setText(String.format("%.4f", msystem.streams.cods()[1].parRCOD));
-			textFieldTOC.setText(String.format("%.2f", msystem.streams.cods()[1].parcj));
-			textFieldother_ROD.setText(String.format("%.4f", msystem.streams.cods()[2].parRCOD));
-			textFieldother.setText(String.format("%.2f", msystem.streams.cods()[2].parcj));
-	}
-
-	public void initwaterdesign() {
-		textFieldpariQp.setText(String.format("%.2f", msystem.pariQp));
-		textFieldpariY.setText(String.format("%.2f", msystem.pariY));
-		textFieldpariQr.setText(String.format("%.2f", msystem.pariQr));
-		TextFieldpariQf.setText(String.format("%.2f", msystem.pariQf()));
-		TextFieldpariQc.setText(String.format("%.2f", msystem.pariQc()));
-		try {
-			TextFieldpariJ.setText(String.format("%.2f", msystem.pariJ()));// 平均水通量
-			TextFieldpariYD.setText(String.format("%.2f", msystem.pariYD()));// DF膜回收率
-		} catch (Exception e1) {
-			JOptionPane.showMessageDialog(getContentPane(), e1.getMessage(), "错误！", JOptionPane.ERROR_MESSAGE);
-		}
-	}
-
-	public void inittablessystem() {
-		for (int i = 0; i < tablesystem.getColumnCount() - 1; i++) {
-			tablesystem.setValueAt(msystem.sections()[i].model, 1, (i + 1));
-			tablesystem.setValueAt(msystem.sections()[i].parEi, 2, (i + 1));
-			tablesystem.setValueAt(msystem.sections()[i].parNVi, 3, (i + 1));
-			tablesystem.setValueAt(df2.format(msystem.sections()[i].parPpi) + " " + lblMpa_2.getText(), 4, (i + 1));
-			tablesystem.setValueAt(df2.format(msystem.sections()[i].parDpi) + " " + lblMpa_MPa0.getText(), 5, (i + 1));
-			tablesystem.setValueAt(df2.format(msystem.sections()[i].parPLi) + " " + lblMpa_MPa2.getText(), 6, (i + 1));
-			tablesystem.setValueAt(i + 1 + "段", 0, i + 1);
-		}
-		for (int m = 0; m < tablesystem.getColumnCount(); m++) {
-			tablesystem.getColumnModel().getColumn(m).setPreferredWidth(100);
-		}
 	}
 
 	public void textfieldparcj(JTextField jtf,int i) {
@@ -2466,4 +2964,48 @@ public class InputForm extends JFrame {
 			jtf.setText(String.format("%.4f", msystem.streams.cods()[i].parRCOD));
 		}
 	}
+	public void textfieldPJ(JTextField jtf,int i) {
+		try {
+			if (Double.parseDouble(jtf.getText()) > 1) {
+				JOptionPane.showMessageDialog(getContentPane(), "效率是不大于1的数值", "错误！", JOptionPane.ERROR_MESSAGE);
+			} else if (Double.parseDouble(jtf.getText()) < 0) {
+				JOptionPane.showMessageDialog(getContentPane(), "效率是不小于0的数值", "错误！", JOptionPane.ERROR_MESSAGE);
+			} else {
+				msystem.pumps()[i].parη_PJ = Double.parseDouble(jtf.getText());
+			}
+			jtf.setText(String.format("%.2f",msystem.pumps()[i].parη_PJ));
+		} catch (Exception e2) {
+			jtf.setText(String.format("%.2f", msystem.pumps()[i].parη_PJ));
+		}
+	}
+	public void textfieldMJ(JTextField jtf,int i) {
+		try {
+			if (Double.parseDouble(jtf.getText()) > 1) {
+				JOptionPane.showMessageDialog(getContentPane(), "效率是不大于1的数值", "错误！", JOptionPane.ERROR_MESSAGE);
+			} else if (Double.parseDouble(jtf.getText()) < 0) {
+				JOptionPane.showMessageDialog(getContentPane(), "效率是不小于0的数值", "错误！", JOptionPane.ERROR_MESSAGE);
+			} else {
+				msystem.pumps()[i].parη_MJ = Double.parseDouble(jtf.getText());
+			}
+			jtf.setText(String.format("%.2f",msystem.pumps()[i].parη_MJ));
+		} catch (Exception e2) {
+			jtf.setText(String.format("%.2f", msystem.pumps()[i].parη_MJ));
+		}
+	}
+	public void textfieldVFD(JTextField jtf,int i) {
+		try {
+			if (Double.parseDouble(jtf.getText()) > 1) {
+				JOptionPane.showMessageDialog(getContentPane(), "效率是不大于1的数值", "错误！", JOptionPane.ERROR_MESSAGE);
+			} else if (Double.parseDouble(jtf.getText()) < 0) {
+				JOptionPane.showMessageDialog(getContentPane(), "效率是不小于0的数值", "错误！", JOptionPane.ERROR_MESSAGE);
+			} else {
+				msystem.pumps()[i].parη_VFD = Double.parseDouble(jtf.getText());
+			}
+			jtf.setText(String.format("%.2f",msystem.pumps()[i].parη_VFD));
+		} catch (Exception e2) {
+			jtf.setText(String.format("%.2f", msystem.pumps()[i].parη_VFD));
+		}
+	}
+	
+	
 }

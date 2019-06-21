@@ -65,7 +65,6 @@ public class MSection {
 				this.streamp = MStream.mix(this.streamp, brane.streamp);
 			}
 			this.streamc = brane.streamc.copy();
-			MLogger.memlog(String.format("{%d} Q:%f", i + 1, brane.streamp.parQ));
 			a = a + brane.streamp.ion(EIon.PO4).ioncp_p;
 			b = b + brane.streamp.ion(EIon.HPO4).ioncp_p;
 			c = c + brane.streamp.ion(EIon.H2PO4).ioncp_p;

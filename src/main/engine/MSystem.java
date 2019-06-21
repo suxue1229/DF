@@ -40,7 +40,13 @@ public class MSystem {
 	public double pariQr = 0;
 	// 储存P用户输入的值
 	public double temp = 0.0;
-
+	
+	//功率之和
+	private double sumparW=0;
+	//电费单元成本 元/kWh
+	public double e=0.62;
+	
+		
 	// 设计平均通量 LMH
 	public double pariJ() throws Exception {
 		double j = 0;
@@ -72,6 +78,7 @@ public class MSystem {
 		streams = new MStream();
 		streams.ion(EIon.HCO3).parcj(0.10);
 		section(2);
+		MPumpmode();
 	}
 
 	// region section management
@@ -93,6 +100,39 @@ public class MSystem {
 	}
 	// endregion
 
+	//泵
+	private List<MPump> pumps = new ArrayList<>();
+	public void MPumpmode() {
+		pumps.add(new MPump("低压泵"));
+		pumps.add(new MPump("高压泵"));
+		pumps.add(new MPump("增压泵"));
+		pumps.add(new MPump("回流泵"));
+	}
+	public MPump[] pumps() {
+		return this.pumps.toArray(new MPump[0]);
+	}
+	public double parη(int i){
+		return 3.59*this.pumps()[i].parη_PJ*this.pumps()[i].parη_MJ*this.pumps()[i].parη_VFD;
+	}
+	
+	// 用电量占比
+	private double parX(double w){
+		return w/this.sumparW;
+	}
+	//系统吨水电耗，kWh/d
+	public double PT(){
+		return this.sumparW/streamp.parQ;
+	}
+	//系统电耗，kWh/m3
+	public double P(){
+		return this.sumparW*24;
+	}
+	//电费成本，元/天
+	public double E(){
+		return P()*e;
+	}
+	
+	
 	public void calculate() throws Exception {
 		double parqd = Math.abs((streams.parqC() - streams.parqA()) / streams.parqC());
 		if (parqd > 0.1) {
@@ -106,9 +146,11 @@ public class MSystem {
 		streams.ion(EIon.P).parmj(0);
 		streamr = null;
 		double lmSO4 = 0;
+		double parw;
 		long start = new Date().getTime();
 		while (true) {
 			double a = 0.0, b = 0.0, c = 0.0;
+			parw=0.0;
 			if (streamr == null) {
 				streamf = streams.copy();
 				streamf.parQ = this.pariQf() + this.pariQr;
@@ -116,7 +158,6 @@ public class MSystem {
 				streamf = MStream.mix(streams, streamr);
 				streamf.parP = streams.parP;
 			}
-			MLogger.syslog(String.format("{INIT} P:%f, Q:%f", streamf.parP, streamf.parQ));
 
 			for (int i = 0; i < sections.size(); i++) {
 				MSection section = sections.get(i);
@@ -133,11 +174,14 @@ public class MSystem {
 					this.streamp = MStream.mix(this.streamp, section.streamp);
 				}
 				this.streamc = section.streamc.copy();
-				MLogger.seclog(String.format("{%d} Q:%f", i + 1, section.streamp.parQ));
-
 				a = a + section.streamp.ion(EIon.PO4).ioncp_p;
 				b = b + section.streamp.ion(EIon.HPO4).ioncp_p;
 				c = c + section.streamp.ion(EIon.H2PO4).ioncp_p;
+				if(sections.get(i).parDpi > 0){
+					parw+=(sections.get(i).streamf.parP-sections.get(i - 1).streamc.parP)*sections.get(i - 1).streamc.parQ;
+				}else {
+					parw=0;
+				}
 			}
 			this.streamp.ion(EIon.PO4).cp_p = a / this.streamp.parQ;
 			this.streamp.ion(EIon.HPO4).cp_p = b / this.streamp.parQ;
@@ -146,7 +190,6 @@ public class MSystem {
 					+ this.streamp.ion(EIon.HPO4).cp_p / this.streamp.ion(EIon.HPO4).parMj
 					+ this.streamp.ion(EIon.H2PO4).cp_p / this.streamp.ion(EIon.H2PO4).parMj) * 30.974;
 			this.streamp.updpH(streams.parmH2CO3());
-			MLogger.syslog(String.format("{RESULT} Q:%f", this.streamp.parQ));
 			// region step-4
 			if (this.streamp.parQ > 1.01 * pariQp) {
 				this.streams.parP -= 0.001;
@@ -169,55 +212,25 @@ public class MSystem {
 			} else {
 				break;
 			}
-			MLogger.syslog(String.format("{ASSERT} Q:%f != %f", this.streamp.parQ, pariQp));
 			if (new Date().getTime() - start > 10000) {
 				throw new TimeoutException("系统模型计算超时");
 			}
 			// endregion
 			lmSO4 = this.streamc.ion(EIon.SO4).parmj();
 		}
-		File log = new File(System.getProperty("user.dir"), "detail.log");
-		if (log.exists()) {
-			FileWriter writer = new FileWriter(log, false);
-			writer.write("名称：" + this.name + "水质报告  \r\n");
-			writer.write("设计：" + this.designer + "  \r\n");
-			writer.write("工艺：" + this.process + "  \r\n");
-			writer.write("时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) + "\r\n\r\n");
-			writer.write("# 系统水质详情：\r\n\r\n");
-			renderStream(writer, "- 原水水质：\r\n\r\n", this.streams);
-			renderStream(writer, "- 进水水质：\r\n\r\n", this.streamf);
-			renderStream(writer, "- 浓水水质：\r\n\r\n", this.streamc);
-			renderStream(writer, "- 产水水质：\r\n\r\n", this.streamp);
-			for (int i = 0; i < sections.size(); i++) {
-				MSection section = sections.get(i);
-				writer.write(String.format("# 第 %d 段水质详情：\r\n\r\n", i + 1));
-				renderStream(writer, "- 进水水质：\r\n\r\n", section.streamf);
-				renderStream(writer, "- 浓水水质：\r\n\r\n", section.streamc);
-				renderStream(writer, "- 产水水质：\r\n\r\n", section.streamp);
-				for (int j = 0; j < section.branes().length; j++) {
-					MBrane brane = section.branes()[j];
-					writer.write(String.format("## 第 %d 段，第 %d 支水质详情：\r\n\r\n", i + 1, j + 1));
-					renderStream(writer, "- 进水水质：\r\n\r\n", brane.streamf);
-					renderStream(writer, "- 浓水水质：\r\n\r\n", brane.streamc);
-					renderStream(writer, "- 产水水质：\r\n\r\n", brane.streamp);
-				}
-			}
-			writer.flush();
-			writer.close();
+		this.pumps()[0].parW=this.pumps()[0].parP*streams.parQ/parη(0);
+		this.pumps()[1].parW=sections.get(0).streamf.parP*sections.get(0).streamf.parQ/parη(1);
+		this.pumps()[2].parW=parw/parη(2);
+		if(pariQr>0&&(sections.get(0).streamf.parP-this.streamc.parP)>0){
+			this.pumps()[3].parW=(sections.get(0).streamf.parP-this.streamc.parP)*pariQr/parη(3);
+		}else{
+			this.pumps()[3].parW=0;
 		}
-	}
-
-	private void renderStream(FileWriter writer, String name, MStream stream) {
-		try {
-			writer.write(name);
-			writer.write(String.format("  | %-8s | %-11s | %-12s | %-12s |\r\n", "指标", "质量浓度", "摩尔浓度", "电荷浓度"));
-			writer.write("  |------------|-----------------|------------------|------------------|\r\n");
-			for (EIon ion : EIon.values()) {
-				writer.write(String.format("  | %-10s | %10.2f mg/L | %10.2f mol/L | %10.2f meq/L |\r\n", ion.name(),
-						stream.ion(ion).parcj(), stream.ion(ion).parmj(), stream.ion(ion).parzj()));
-			}
-			writer.write("\r\n");
-		} catch (Exception e) {
-		}
+		for(int i=0;i<pumps().length;i++){
+			this.sumparW+=this.pumps()[i].parW;
+		 }
+		for(int i=0;i<pumps().length;i++){
+			this.pumps()[i].parX=parX(this.pumps()[i].parW);
+		 }
 	}
 }

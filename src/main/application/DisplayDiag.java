@@ -25,6 +25,7 @@ public class DisplayDiag extends JFrame {
 	private JTable tablesystemout;
 	private JTable tableworking;
 	private JTable tablecalc;
+	private JTable pumppower,elecalc;
 	java.text.DecimalFormat df2 = new java.text.DecimalFormat("0.00");
 	java.text.DecimalFormat df3 = new java.text.DecimalFormat("0.000");
 	MSystem msystem;
@@ -447,7 +448,7 @@ public class DisplayDiag extends JFrame {
 		heade_3.setPreferredSize(new Dimension(heade_3.getWidth(), 0));// 表头高度设置
 		tablecalc.getTableHeader().setReorderingAllowed(false);
 		tablecalc.getTableHeader().setVisible(false);
-		tablecalc.setRowHeight(0, 30);// 指定2行的高度30
+		tablecalc.setRowHeight(0, 50);// 指定2行的高度30
 		tablecalc.getColumnModel().getColumn(0).setPreferredWidth(100);
 		JScrollPane scrollPane_3 = new JScrollPane(tablecalc);
 
@@ -484,6 +485,111 @@ public class DisplayDiag extends JFrame {
 										.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnNewButton_1)
 										.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 		panel_3.setLayout(gl_panel_3);
+		
+		JPanel panel_4 = new JPanel();
+		tabbedPane.addTab("泵用电量", null, panel_4, null);
+		pumppower = new JTable(5, 3) {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		DefaultTableModel tablemodel_pumppower = (DefaultTableModel) pumppower.getModel();
+		tablemodel_pumppower.setValueAt("泵名称", 0, 0);
+		tablemodel_pumppower.setValueAt("泵用电量(kW)", 0, 1);
+		tablemodel_pumppower.setValueAt("泵用电量占比", 0, 2);
+		for(int i=0;i<msystem.pumps().length;i++){
+			tablemodel_pumppower.setValueAt(msystem.pumps()[i].name, i+1, 0);
+			tablemodel_pumppower.setValueAt(String.format("%.4f",msystem.pumps()[i].parW), i+1, 1);
+			tablemodel_pumppower.setValueAt(String.format("%.4f",msystem.pumps()[i].parX), i+1, 2);
+		}
+		JTableHeader heade_power = pumppower.getTableHeader();
+		heade_power.setPreferredSize(new Dimension(heade_power.getWidth(), 0));// 表头高度设置
+		pumppower.getTableHeader().setReorderingAllowed(false);
+		pumppower.getTableHeader().setVisible(false);
+		pumppower.setRowHeight(0, 30);// 指定2行的高度30
+		tableFocusEvent(pumppower);
+		pumppower.getColumnModel().getColumn(0).setPreferredWidth(100);
+		JScrollPane scrollPane_power = new JScrollPane(pumppower);
+
+		elecalc = new JTable(3, 2) {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		DefaultTableModel tablemodel_elecal = (DefaultTableModel) elecalc.getModel();
+		tablemodel_elecal.setValueAt("总电耗(kWh/d)", 0, 0);
+		tablemodel_elecal.setValueAt("吨水电耗(kWh/m3)", 1, 0);
+		tablemodel_elecal.setValueAt("电费(元/d)", 2, 0);
+	
+		tablemodel_elecal.setValueAt(String.format("%.4f", msystem.P()), 0, 1);
+		tablemodel_elecal.setValueAt(String.format("%.4f", msystem.PT()), 1, 1);
+		tablemodel_elecal.setValueAt(String.format("%.4f", msystem.E()), 2, 1);
+		JScrollPane scrollPane_elecal = new JScrollPane(elecalc);
+		JTableHeader heade_elecal = elecalc.getTableHeader();
+		heade_elecal.setPreferredSize(new Dimension(heade_elecal.getWidth(), 0));// 表头高度设置
+		elecalc.getTableHeader().setReorderingAllowed(false);
+		elecalc.getTableHeader().setVisible(false);
+
+		JButton btnNewButton_power = new JButton("泵用电量导出");
+		btnNewButton_power.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+
+				try {
+					fillData(pumppower, new File(System.getProperty("user.dir"), "泵用电量.xls"), "泵用电量");
+					JOptionPane.showMessageDialog(null,
+							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+
+		JButton btnNewButton_elecal = new JButton("电耗与电费导出");
+		btnNewButton_elecal.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+
+				try {
+					fillData(elecalc, new File(System.getProperty("user.dir"), "电耗与电费.xls"), "电耗与电费");
+					JOptionPane.showMessageDialog(null,
+							"Data saved at " + System.getProperty("user.dir") + " successfully", "Message",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+
+		GroupLayout gl_panel_power = new GroupLayout(panel_4);
+		gl_panel_power.setHorizontalGroup(
+			gl_panel_power.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_power.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_power.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane_power, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+						.addComponent(scrollPane_elecal, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+						.addComponent(btnNewButton_elecal, Alignment.TRAILING)
+						.addComponent(btnNewButton_power, Alignment.TRAILING))
+					.addContainerGap())
+		);
+		gl_panel_power.setVerticalGroup(
+			gl_panel_power.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_power.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(scrollPane_power, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnNewButton_power)
+					.addPreferredGap(ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+					.addComponent(scrollPane_elecal, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnNewButton_elecal)
+					.addGap(40))
+		);
+		panel_4.setLayout(gl_panel_power);
+		
+		
 		getContentPane().setLayout(groupLayout);
 	}
 

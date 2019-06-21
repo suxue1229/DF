@@ -142,19 +142,6 @@ public class MBrane {
 				/ (parRjd(ion) + (1 - parRjd(ion)) * Math.exp(bj(ion) * parJp / parut()));
 	}
 
-	// // COD透过系数
-	// private double parRCOD(double Mj) {
-	// if (Mj == 0) {
-	// return damCOD;
-	// }
-	// if (Mj <= 42) {
-	// return damMin;
-	// }
-	// if (Mj > 400) {
-	// return damMax;
-	// }
-	// return 1 - damCoe * Math.exp(-Mj / damDiv);
-	// }
 
 	// 通量 LMH
 	public double parFi() {
@@ -269,7 +256,6 @@ public class MBrane {
 			double Jpn = 0;
 			if (Jp > 0) {
 				Jpn = parJp();
-				MLogger.memlog(String.format("Jp %f -> %f, %f%%", Jp, Jpn, 100 * Math.abs((Jpn - Jp) / Jp)));
 				if (Jpn == Double.POSITIVE_INFINITY || Jpn == Double.NaN) {
 					throw new ArithmeticException("元件水通量计算错误");
 				}

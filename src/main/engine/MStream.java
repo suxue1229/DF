@@ -288,7 +288,6 @@ public class MStream {
 	public MCOD[] cods() {
 		return this.cods.toArray(new MCOD[0]);
 	}
-
 	public MStream copy() throws Exception {
 		MStream stream = new MStream();
 		stream.parT = this.parT;
