@@ -146,11 +146,11 @@ public class MSystem {
 		streams.ion(EIon.P).parmj(0);
 		streamr = null;
 		double lmSO4 = 0;
-		double parw;
+		double parw,tempsum;
 		long start = new Date().getTime();
 		while (true) {
 			double a = 0.0, b = 0.0, c = 0.0;
-			parw=0.0;
+			parw=0.0;tempsum=0.0;
 			if (streamr == null) {
 				streamf = streams.copy();
 				streamf.parQ = this.pariQf() + this.pariQr;
@@ -227,8 +227,9 @@ public class MSystem {
 			this.pumps()[3].parW=0;
 		}
 		for(int i=0;i<pumps().length;i++){
-			this.sumparW+=this.pumps()[i].parW;
+			tempsum+=this.pumps()[i].parW;
 		 }
+		this.sumparW=tempsum;
 		for(int i=0;i<pumps().length;i++){
 			this.pumps()[i].parX=parX(this.pumps()[i].parW);
 		 }
