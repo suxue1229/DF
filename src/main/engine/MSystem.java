@@ -219,10 +219,10 @@ public class MSystem {
 			lmSO4 = this.streamc.ion(EIon.SO4).parmj();
 		}
 		this.pumps()[0].parW=this.pumps()[0].parP*streams.parQ/parη(0);
-		this.pumps()[1].parW=sections.get(0).streamf.parP*sections.get(0).streamf.parQ/parη(1);
+		this.pumps()[1].parW=(sections.get(0).streamf.parP-this.pumps()[0].parP)*sections.get(0).streamf.parQ/parη(1);
 		this.pumps()[2].parW=parw/parη(2);
-		if(pariQr>0&&(sections.get(0).streamf.parP-this.streamc.parP)>0){
-			this.pumps()[3].parW=(sections.get(0).streamf.parP-this.streamc.parP)*pariQr/parη(3);
+		if(pariQr>0&&(this.pumps()[0].parP-this.streamc.parP)>0){
+			this.pumps()[3].parW=(this.pumps()[0].parP-this.streamc.parP)*pariQr/parη(3);
 		}else{
 			this.pumps()[3].parW=0;
 		}
