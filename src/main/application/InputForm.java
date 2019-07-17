@@ -93,20 +93,13 @@ public class InputForm extends JFrame {
 	private GridBagConstraints gbc_labelother;
 	private GridBagConstraints gbc_label_other_mgl;
 	private GridBagConstraints gbc_label4_1;
-	private JTextField textField4_1_1;
-	private JTextField textField4_1_2;
-	private JTextField textField4_1_3;
 	private JTextField textField4_2_1;
 	private JTextField textField4_2_2;
 	private JTextField textField4_2_3;
 	private JTextField textField4_3_1;
 	private JTextField textField4_3_2;
 	private JTextField textField4_3_3;
-	private JTextField textField4_4_1;
-	private JTextField textField4_4_2;
-	private JTextField textField4_4_3;
 	private JTextField textField4_5_1;
-	private JTextField textField4_6_1;
 
 	/**
 	 * Create the application.
@@ -2393,115 +2386,12 @@ public class InputForm extends JFrame {
 		gbl_panel_40.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0,1.0,1.0};
 		panel_40.setLayout(gbl_panel_40);
 		
-		JLabel label4_1 = new JLabel("低压泵");
-		label4_1.setFont(new Font("宋体", Font.PLAIN, 18));
-		label4_1.setForeground(Color.BLACK);
-		GridBagConstraints gbc_label_di;
-		gbc_label_di = new GridBagConstraints();
-		gbc_label_di.insets = new Insets(0, 0, 5, 5);
-		gbc_label_di.gridx = 0;
-		gbc_label_di.gridy = 0;
-		panel_40.add(label4_1, gbc_label_di);
-		
-		JLabel label4_1_1 = new JLabel("泵效率");
-		GridBagConstraints gbc_label4_1_1_di = new GridBagConstraints();
-		gbc_label4_1_1_di.anchor = GridBagConstraints.EAST;
-		gbc_label4_1_1_di.insets = new Insets(0, 0, 5, 5);
-		gbc_label4_1_1_di.gridx = 0;
-		gbc_label4_1_1_di.gridy = 1;
-		panel_40.add(label4_1_1, gbc_label4_1_1_di);
-		
-		textField4_1_1 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_PJ));
-		textField4_1_1.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textfieldPJ(textField4_1_1,0);
-			}
-		});
-		textField4_1_1.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-				{
-					textfieldPJ(textField4_1_1,0);
-				}
-			}
-		});
-		GridBagConstraints gbc_textField4_1_1_di = new GridBagConstraints();
-		gbc_textField4_1_1_di.insets = new Insets(0, 0, 5, 5);
-		gbc_textField4_1_1_di.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField4_1_1_di.gridx = 1;
-		gbc_textField4_1_1_di.gridy = 1;
-		panel_40.add(textField4_1_1, gbc_textField4_1_1_di);
-		textField4_1_1.setColumns(10);
-		
-		JLabel label4_1_2 = new JLabel("电机效率");
-		GridBagConstraints gbc_label4_1_2 = new GridBagConstraints();
-		gbc_label4_1_2.anchor = GridBagConstraints.EAST;
-		gbc_label4_1_2.insets = new Insets(0, 0, 5, 5);
-		gbc_label4_1_2.gridx = 2;
-		gbc_label4_1_2.gridy = 1;
-		panel_40.add(label4_1_2, gbc_label4_1_2);
-		
-		textField4_1_2 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_MJ));
-		textField4_1_2.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textfieldMJ(textField4_1_2,0);
-			}
-		});
-		textField4_1_2.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-				{
-					textfieldMJ(textField4_1_2,0);
-				}
-			}
-		});
-		GridBagConstraints gbc_textField4_1_2 = new GridBagConstraints();
-		gbc_textField4_1_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField4_1_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField4_1_2.gridx = 3;
-		gbc_textField4_1_2.gridy = 1;
-		panel_40.add(textField4_1_2, gbc_textField4_1_2);
-		textField4_1_2.setColumns(10);
-		
-		JLabel label4_1_3 = new JLabel("变频效率");
-		GridBagConstraints gbc_label4_1_3 = new GridBagConstraints();
-		gbc_label4_1_3.anchor = GridBagConstraints.EAST;
-		gbc_label4_1_3.insets = new Insets(0, 0, 5, 5);
-		gbc_label4_1_3.gridx = 4;
-		gbc_label4_1_3.gridy = 1;
-		panel_40.add(label4_1_3, gbc_label4_1_3);
-		
-		textField4_1_3 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_VFD));
-		textField4_1_3.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textfieldVFD(textField4_1_3,0);
-			}
-		});
-		textField4_1_3.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-				{
-					textfieldVFD(textField4_1_3,0);
-				}
-			}
-		});
-		GridBagConstraints gbc_textField4_1_3 = new GridBagConstraints();
-		gbc_textField4_1_3.insets = new Insets(0, 0, 5, 0);
-		gbc_textField4_1_3.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField4_1_3.gridx = 5;
-		gbc_textField4_1_3.gridy = 1;
-		panel_40.add(textField4_1_3, gbc_textField4_1_3);
-		textField4_1_3.setColumns(10);
-		
 		JLabel label4_2 = new JLabel("高压泵");
 		label4_2.setFont(new Font("宋体", Font.PLAIN, 18));
 		GridBagConstraints gbc_label4_2 = new GridBagConstraints();
 		gbc_label4_2.insets = new Insets(0, 0, 5, 5);
 		gbc_label4_2.gridx = 0;
-		gbc_label4_2.gridy = 2;
+		gbc_label4_2.gridy = 1;
 		panel_40.add(label4_2, gbc_label4_2);
 		
 		JLabel label4_2_1 = new JLabel("泵效率");
@@ -2509,21 +2399,21 @@ public class InputForm extends JFrame {
 		gbc_label4_2_1.anchor = GridBagConstraints.EAST;
 		gbc_label4_2_1.insets = new Insets(0, 0, 5, 5);
 		gbc_label4_2_1.gridx = 0;
-		gbc_label4_2_1.gridy = 3;
+		gbc_label4_2_1.gridy = 2;
 		panel_40.add(label4_2_1, gbc_label4_2_1);
 		
-		textField4_2_1 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_PJ));
+		textField4_2_1 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_PJ));
 		textField4_2_1.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldPJ(textField4_2_1,1);
+				textfieldPJ(textField4_2_1,0);
 			}
 		});
 		textField4_2_1.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldPJ(textField4_2_1,1);
+					textfieldPJ(textField4_2_1,0);
 				}
 			}
 		});
@@ -2532,7 +2422,7 @@ public class InputForm extends JFrame {
 		gbc_textField4_2_1.insets = new Insets(0, 0, 5, 5);
 		gbc_textField4_2_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField4_2_1.gridx = 1;
-		gbc_textField4_2_1.gridy = 3;
+		gbc_textField4_2_1.gridy = 2;
 		panel_40.add(textField4_2_1, gbc_textField4_2_1);
 		
 		JLabel label4_2_2 = new JLabel("电机效率");
@@ -2540,21 +2430,21 @@ public class InputForm extends JFrame {
 		gbc_label4_2_2.anchor = GridBagConstraints.EAST;
 		gbc_label4_2_2.insets = new Insets(0, 0, 5, 5);
 		gbc_label4_2_2.gridx = 2;
-		gbc_label4_2_2.gridy = 3;
+		gbc_label4_2_2.gridy = 2;
 		panel_40.add(label4_2_2, gbc_label4_2_2);
 		
-		textField4_2_2 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_MJ));
+		textField4_2_2 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_MJ));
 		textField4_2_2.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldMJ(textField4_2_2,1);
+				textfieldMJ(textField4_2_2,0);
 			}
 		});
 		textField4_2_2.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldMJ(textField4_2_2,1);
+					textfieldMJ(textField4_2_2,0);
 				}
 			}
 		});
@@ -2563,7 +2453,7 @@ public class InputForm extends JFrame {
 		gbc_textField4_2_2.insets = new Insets(0, 0, 5, 5);
 		gbc_textField4_2_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField4_2_2.gridx = 3;
-		gbc_textField4_2_2.gridy = 3;
+		gbc_textField4_2_2.gridy = 2;
 		panel_40.add(textField4_2_2, gbc_textField4_2_2);
 		
 		JLabel label4_2_3 = new JLabel("变频效率");
@@ -2571,21 +2461,21 @@ public class InputForm extends JFrame {
 		gbc_label4_2_3.anchor = GridBagConstraints.EAST;
 		gbc_label4_2_3.insets = new Insets(0, 0, 5, 5);
 		gbc_label4_2_3.gridx = 4;
-		gbc_label4_2_3.gridy = 3;
+		gbc_label4_2_3.gridy = 2;
 		panel_40.add(label4_2_3, gbc_label4_2_3);
 		
-		textField4_2_3 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_VFD));
+		textField4_2_3 = new JTextField(String.format("%.2f", msystem.pumps()[0].parη_VFD));
 		textField4_2_3.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldVFD(textField4_2_3,1);
+				textfieldVFD(textField4_2_3,0);
 			}
 		});
 		textField4_2_3.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldVFD(textField4_2_3,1);
+					textfieldVFD(textField4_2_3,0);
 				}
 			}
 		});
@@ -2594,7 +2484,7 @@ public class InputForm extends JFrame {
 		gbc_textField4_2_3.insets = new Insets(0, 0, 5, 0);
 		gbc_textField4_2_3.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField4_2_3.gridx = 5;
-		gbc_textField4_2_3.gridy = 3;
+		gbc_textField4_2_3.gridy = 2;
 		panel_40.add(textField4_2_3, gbc_textField4_2_3);
 		
 		JLabel label4_3 = new JLabel("增压泵");
@@ -2613,18 +2503,18 @@ public class InputForm extends JFrame {
 		gbc_label4_3_1.gridy = 5;
 		panel_40.add(label4_3_1, gbc_label4_3_1);
 		
-		textField4_3_1 = new JTextField(String.format("%.2f", msystem.pumps()[2].parη_PJ));
+		textField4_3_1 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_PJ));
 		textField4_3_1.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldPJ(textField4_3_1,2);
+				textfieldPJ(textField4_3_1,1);
 			}
 		});
 		textField4_3_1.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldPJ(textField4_3_1,2);
+					textfieldPJ(textField4_3_1,1);
 				}
 			}
 		});
@@ -2644,18 +2534,18 @@ public class InputForm extends JFrame {
 		gbc_label4_3_2.gridy = 5;
 		panel_40.add(label4_3_2, gbc_label4_3_2);
 		
-		textField4_3_2 = new JTextField(String.format("%.2f", msystem.pumps()[2].parη_MJ));
+		textField4_3_2 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_MJ));
 		textField4_3_2.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldMJ(textField4_3_2,2);
+				textfieldMJ(textField4_3_2,1);
 			}
 		});
 		textField4_3_2.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldMJ(textField4_3_2,2);
+					textfieldMJ(textField4_3_2,1);
 				}
 			}
 		});
@@ -2675,18 +2565,18 @@ public class InputForm extends JFrame {
 		gbc_label4_3_3.gridy = 5;
 		panel_40.add(label4_3_3, gbc_label4_3_3);
 		
-		textField4_3_3 = new JTextField(String.format("%.2f", msystem.pumps()[2].parη_VFD));
+		textField4_3_3 = new JTextField(String.format("%.2f", msystem.pumps()[1].parη_VFD));
 		textField4_3_3.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				textfieldVFD(textField4_3_3,2);
+				textfieldVFD(textField4_3_3,1);
 			}
 		});
 		textField4_3_3.addKeyListener(new java.awt.event.KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
 				{
-					textfieldVFD(textField4_3_3,2);
+					textfieldVFD(textField4_3_3,1);
 				}
 			}
 		});
@@ -2697,106 +2587,6 @@ public class InputForm extends JFrame {
 		gbc_textField4_3_3.gridx = 5;
 		gbc_textField4_3_3.gridy = 5;
 		panel_40.add(textField4_3_3, gbc_textField4_3_3);
-		
-		JLabel label4_4 = new JLabel("回流泵");
-		label4_4.setFont(new Font("宋体", Font.PLAIN, 18));
-		GridBagConstraints gbc_label4_4 = new GridBagConstraints();
-		gbc_label4_4.insets = new Insets(0, 0, 5, 5);
-		gbc_label4_4.gridx = 0;
-		gbc_label4_4.gridy = 6;
-		panel_40.add(label4_4, gbc_label4_4);
-		
-		JLabel label4_4_1 = new JLabel("泵效率");
-		GridBagConstraints gbc_label4_4_1 = new GridBagConstraints();
-		gbc_label4_4_1.anchor = GridBagConstraints.EAST;
-		gbc_label4_4_1.insets = new Insets(0, 0, 0, 5);
-		gbc_label4_4_1.gridx = 0;
-		gbc_label4_4_1.gridy = 7;
-		panel_40.add(label4_4_1, gbc_label4_4_1);
-		
-		textField4_4_1 = new JTextField(String.format("%.2f", msystem.pumps()[3].parη_PJ));
-		textField4_4_1.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textfieldPJ(textField4_4_1,3);
-			}
-		});
-		textField4_4_1.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-				{
-					textfieldPJ(textField4_4_1,3);
-				}
-			}
-		});
-		textField4_4_1.setColumns(10);
-		GridBagConstraints gbc_textField4_4_1 = new GridBagConstraints();
-		gbc_textField4_4_1.insets = new Insets(0, 0, 0, 5);
-		gbc_textField4_4_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField4_4_1.gridx = 1;
-		gbc_textField4_4_1.gridy = 7;
-		panel_40.add(textField4_4_1, gbc_textField4_4_1);
-		
-		JLabel label4_4_2 = new JLabel("电机效率");
-		GridBagConstraints gbc_label4_4_2 = new GridBagConstraints();
-		gbc_label4_4_2.anchor = GridBagConstraints.EAST;
-		gbc_label4_4_2.insets = new Insets(0, 0, 0, 5);
-		gbc_label4_4_2.gridx = 2;
-		gbc_label4_4_2.gridy = 7;
-		panel_40.add(label4_4_2, gbc_label4_4_2);
-		
-		textField4_4_2 = new JTextField(String.format("%.2f", msystem.pumps()[3].parη_MJ));
-		textField4_4_2.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textfieldMJ(textField4_4_2,3);
-			}
-		});
-		textField4_4_2.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-				{
-					textfieldMJ(textField4_4_2,3);
-				}
-			}
-		});
-		textField4_4_2.setColumns(10);
-		GridBagConstraints gbc_textField4_4_2 = new GridBagConstraints();
-		gbc_textField4_4_2.insets = new Insets(0, 0, 0, 5);
-		gbc_textField4_4_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField4_4_2.gridx = 3;
-		gbc_textField4_4_2.gridy = 7;
-		panel_40.add(textField4_4_2, gbc_textField4_4_2);
-		
-		JLabel label4_4_3 = new JLabel("变频效率");
-		GridBagConstraints gbc_label4_4_3 = new GridBagConstraints();
-		gbc_label4_4_3.anchor = GridBagConstraints.EAST;
-		gbc_label4_4_3.insets = new Insets(0, 0, 0, 5);
-		gbc_label4_4_3.gridx = 4;
-		gbc_label4_4_3.gridy = 7;
-		panel_40.add(label4_4_3, gbc_label4_4_3);
-		
-		textField4_4_3 = new JTextField(String.format("%.2f", msystem.pumps()[3].parη_VFD));
-		textField4_4_3.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				textfieldVFD(textField4_4_3,3);
-			}
-		});
-		textField4_4_3.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-				{
-					textfieldVFD(textField4_4_3,3);
-				}
-			}
-		});
-		textField4_4_3.setColumns(10);
-		GridBagConstraints gbc_textField4_4_3 = new GridBagConstraints();
-		gbc_textField4_4_3.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField4_4_3.gridx = 5;
-		gbc_textField4_4_3.gridy = 7;
-		panel_40.add(textField4_4_3, gbc_textField4_4_3);
 		
 		JPanel panel_42 = new JPanel();
 		panel_42.setForeground(Color.BLACK);
@@ -2855,45 +2645,6 @@ public class InputForm extends JFrame {
 		gbc_label4_5_1.gridx = 3;
 		gbc_label4_5_1.gridy = 2;
 		panel_42.add(label4_5_1, gbc_label4_5_1);
-		
-		JLabel label4_6 = new JLabel("低压泵压力");
-		GridBagConstraints gbc_label4_6 = new GridBagConstraints();
-		gbc_label4_6.insets = new Insets(0, 0, 5, 5);
-		gbc_label4_6.gridx = 1;
-		gbc_label4_6.gridy = 3;
-		panel_42.add(label4_6, gbc_label4_6);
-		
-		textField4_6_1 = new JTextField(String.format("%.2f", msystem.pumps()[0].parP));
-		textField4_6_1.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				msystem.pumps()[0].parP = Double.parseDouble(textField4_6_1.getText());
-				textField4_6_1.setText(String.format("%.2f", msystem.pumps()[0].parP));
-			}
-		});
-		textField4_6_1.addKeyListener(new java.awt.event.KeyAdapter() {
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) // 判断按下的键是否是回车键
-				{
-					msystem.pumps()[0].parP = Double.parseDouble(textField4_6_1.getText());
-					textField4_6_1.setText(String.format("%.2f", msystem.pumps()[0].parP));
-				}
-			}
-		});
-		GridBagConstraints gbc_textField4_6_1 = new GridBagConstraints();
-		gbc_textField4_6_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField4_6_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField4_6_1.gridx = 2;
-		gbc_textField4_6_1.gridy = 3;
-		panel_42.add(textField4_6_1, gbc_textField4_6_1);
-		textField4_6_1.setColumns(10);
-		
-		JLabel label4_6_1 = new JLabel("MPa");
-		GridBagConstraints gbc_label4_6_1 = new GridBagConstraints();
-		gbc_label4_6_1.insets = new Insets(0, 0, 5, 5);
-		gbc_label4_6_1.gridx = 3;
-		gbc_label4_6_1.gridy = 3;
-		panel_42.add(label4_6_1, gbc_label4_6_1);
 		powerlist.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {

@@ -488,7 +488,7 @@ public class DisplayDiag extends JFrame {
 		
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("泵用电量", null, panel_4, null);
-		pumppower = new JTable(5, 3) {
+		pumppower = new JTable(3, 2) {
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
@@ -496,11 +496,9 @@ public class DisplayDiag extends JFrame {
 		DefaultTableModel tablemodel_pumppower = (DefaultTableModel) pumppower.getModel();
 		tablemodel_pumppower.setValueAt("泵名称", 0, 0);
 		tablemodel_pumppower.setValueAt("泵用电量(kW)", 0, 1);
-		tablemodel_pumppower.setValueAt("泵用电量占比", 0, 2);
 		for(int i=0;i<msystem.pumps().length;i++){
 			tablemodel_pumppower.setValueAt(msystem.pumps()[i].name, i+1, 0);
 			tablemodel_pumppower.setValueAt(String.format("%.4f",msystem.pumps()[i].parW), i+1, 1);
-			tablemodel_pumppower.setValueAt(String.format("%.4f",msystem.pumps()[i].parX), i+1, 2);
 		}
 		JTableHeader heade_power = pumppower.getTableHeader();
 		heade_power.setPreferredSize(new Dimension(heade_power.getWidth(), 0));// 表头高度设置

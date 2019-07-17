@@ -103,10 +103,8 @@ public class MSystem {
 	//泵
 	private List<MPump> pumps = new ArrayList<>();
 	public void MPumpmode() {
-		pumps.add(new MPump("低压泵"));
 		pumps.add(new MPump("高压泵"));
 		pumps.add(new MPump("增压泵"));
-		pumps.add(new MPump("回流泵"));
 	}
 	public MPump[] pumps() {
 		return this.pumps.toArray(new MPump[0]);
@@ -115,10 +113,6 @@ public class MSystem {
 		return 3.59*this.pumps()[i].parη_PJ*this.pumps()[i].parη_MJ*this.pumps()[i].parη_VFD;
 	}
 	
-	// 用电量占比
-	private double parX(double w){
-		return w/this.sumparW;
-	}
 	//系统吨水电耗，kWh/d
 	public double PT(){
 		return this.sumparW/streamp.parQ;
@@ -218,20 +212,11 @@ public class MSystem {
 			// endregion
 			lmSO4 = this.streamc.ion(EIon.SO4).parmj();
 		}
-		this.pumps()[0].parW=this.pumps()[0].parP*streams.parQ/parη(0);
-		this.pumps()[1].parW=(sections.get(0).streamf.parP-this.pumps()[0].parP)*sections.get(0).streamf.parQ/parη(1);
-		this.pumps()[2].parW=parw/parη(2);
-		if(pariQr>0&&(this.pumps()[0].parP-this.streamc.parP)>0){
-			this.pumps()[3].parW=(this.pumps()[0].parP-this.streamc.parP)*pariQr/parη(3);
-		}else{
-			this.pumps()[3].parW=0;
-		}
+		this.pumps()[0].parW=(sections.get(0).streamf.parP*sections.get(0).streamf.parQ-this.streamc.parP*pariQr)/parη(0);
+		this.pumps()[1].parW=parw/parη(1);
 		for(int i=0;i<pumps().length;i++){
 			tempsum+=this.pumps()[i].parW;
 		 }
 		this.sumparW=tempsum;
-		for(int i=0;i<pumps().length;i++){
-			this.pumps()[i].parX=parX(this.pumps()[i].parW);
-		 }
 	}
 }
