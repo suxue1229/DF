@@ -755,6 +755,7 @@ public class InputForm extends JFrame {
 			tablemodel.setValueAt(anion[i], i, 4);
 		}
 		// 离子表格初始化
+		inittableIon();
 		for (int i = 0; i < 11; i++) {
 			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parcj()), i, 1);
 			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i, 2);
@@ -1429,18 +1430,21 @@ public class InputForm extends JFrame {
 					waterjsp.remove(waterjsp.getRightComponent());
 					jsprightpanel.remove(panelIon);
 					jsprightpanel.remove(organismpanel);
+					initwaterpara();
 					jsprightpanel.add(panelWater);
 					waterjsp.add(jsprightpanel, JSplitPane.RIGHT);
 				} else if (jstleftlist.getSelectedIndex() == 1) {
 					waterjsp.remove(waterjsp.getRightComponent());
 					jsprightpanel.remove(panelWater);
 					jsprightpanel.remove(organismpanel);
+					inittableIon();
 					jsprightpanel.add(panelIon);
 					waterjsp.add(jsprightpanel, JSplitPane.RIGHT);
 				} else if (jstleftlist.getSelectedIndex() == 2) {
 					waterjsp.remove(waterjsp.getRightComponent());
 					jsprightpanel.remove(panelWater);
 					jsprightpanel.remove(panelIon);
+					initOrganism();
 					jsprightpanel.add(organismpanel);
 					waterjsp.add(jsprightpanel, JSplitPane.RIGHT);
 				}
@@ -1954,6 +1958,7 @@ public class InputForm extends JFrame {
 		gbc_label326.gridy = 9;
 		panel_32.add(labelparDpi, gbc_label326);
 		textFieldparDpi = new JTextField(String.format("%.2f", msystem.sections()[0].parDpi));
+		textFieldparDpi.setEnabled(false);
 		GridBagConstraints gbc_textField_326_1 = new GridBagConstraints();
 		gbc_textField_326_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_326_1.insets = new Insets(0, 0, 5, 5);
@@ -1991,12 +1996,6 @@ public class InputForm extends JFrame {
 		gbc_lblMpa2.gridy = 9;
 		panel_32.add(lblMpa_MPa2, gbc_lblMpa2);
 
-		modelcomboBox.setEnabled(false);
-		textFieldparEi.setEnabled(false);
-		textFieldparNVi.setEnabled(false);
-		textFieldparPpi.setEnabled(false);
-		textFieldparDpi.setEnabled(false);
-		textFieldparPLi.setEnabled(false);
 
 		textFieldsections.addFocusListener(new FocusAdapter() {
 			@Override
@@ -2087,13 +2086,12 @@ public class InputForm extends JFrame {
 		tablesystem.getColumnModel().addColumnModelListener(new TableColumnModelListener() {
 			@Override
 			public void columnSelectionChanged(ListSelectionEvent e) {
-				if (tablesystem.getSelectedColumn() >= 1) {
-					modelcomboBox.setEnabled(true);
-					textFieldparEi.setEnabled(true);
-					textFieldparNVi.setEnabled(true);
-					textFieldparPpi.setEnabled(true);
+				if (tablesystem.getSelectedColumn() == 0) {
+					tablesystem.setColumnSelectionInterval(1, 1);
+				} else if(tablesystem.getSelectedColumn() == 1){
+					textFieldparDpi.setEnabled(false);
+				} else if (tablesystem.getSelectedColumn() > 1) {
 					textFieldparDpi.setEnabled(true);
-					textFieldparPLi.setEnabled(true);
 					textFieldsection.setText(String.format("%d", tablesystem.getSelectedColumn()));
 					modelcomboBox.setSelectedItem(msystem.sections()[tablesystem.getSelectedColumn() - 1].model);
 					textFieldparEi.setText(
@@ -2107,9 +2105,8 @@ public class InputForm extends JFrame {
 					textFieldparPLi.setText(
 							String.format("%.2f", msystem.sections()[tablesystem.getSelectedColumn() - 1].parPLi));
 
-				} else if (tablesystem.getSelectedColumn() == 0) {
-					tablesystem.setColumnSelectionInterval(1, 1);
-				}
+				} 
+				
 			}
 
 			@Override
@@ -2353,11 +2350,13 @@ public class InputForm extends JFrame {
 				if (systemlist.getSelectedIndex() == 0) {
 					systemjsp.remove(systemjsp.getRightComponent());
 					systempanel.remove(panel_32);
+					initwaterdesign();
 					systempanel.add(panel_30);
 					systemjsp.add(systempanel, JSplitPane.RIGHT);
 				} else if (systemlist.getSelectedIndex() == 1) {
 					systemjsp.remove(systemjsp.getRightComponent());
 					systempanel.remove(panel_30);
+					inittablessystem();
 					systempanel.add(panel_32);
 					systemjsp.add(systempanel, JSplitPane.RIGHT);
 				}
@@ -2688,6 +2687,75 @@ public class InputForm extends JFrame {
 		});
 	}
 
+	
+	public void initwaterpara() {	
+		textFieldTemperature.setText((String.format("%.1f", msystem.streams.parT())));// 温度	
+		textFieldpH.setText((String.format("%.2f", msystem.streams.parpH())));// pH	
+		// 电导率、离子强度、渗透压	
+		TextFieldconductivity.setText(String.format("%.2f", msystem.streams.parS()));// 电导率	
+		TextFieldIon.setText((String.format("%.3f", msystem.streams.paru())));// 离子强度	
+		TextFieldOsmoticPressure.setText((String.format("%.2f", msystem.streams.parpif())));// 渗透压	
+		// 碱度	
+		textFieldalkalinity.setText((String.format("%.1f", msystem.streams.parcjd())));	
+		// TDS	
+		textFieldTDS.setText(String.format("%.1f", msystem.streams.tds()));	
+	}	
+
+	public void inittableIon() {	
+		for (int i = 0; i < 11; i++) {	
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parcj()), i, 1);	
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i, 2);	
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parzj()), i, 3);	
+		}	
+		for (int i = 11; i < EIon.values().length - 3; i++) {	
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parcj()), i - 11, 5);	
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parmj() * 1000), i - 11, 6);	
+			tableIon.setValueAt(df2.format(msystem.streams.ion(EIon.values()[i]).parzj()), i - 11, 7);	
+		}	
+		tableIon.setValueAt(df2.format(msystem.streams.parqC()), 11, 3);	
+		tableIon.setValueAt(df2.format(msystem.streams.parqA()), 11, 7);	
+	}	
+
+	public void initOrganism() {	
+			textFieldCOD_ROD.setText(String.format("%.4f", msystem.streams.cods()[0].parRCOD));	
+			textFieldCOD.setText(String.format("%.2f", msystem.streams.cods()[0].parcj));	
+			textFieldTOC_ROD.setText(String.format("%.4f", msystem.streams.cods()[1].parRCOD));	
+			textFieldTOC.setText(String.format("%.2f", msystem.streams.cods()[1].parcj));	
+			textFieldother_ROD.setText(String.format("%.4f", msystem.streams.cods()[2].parRCOD));	
+			textFieldother.setText(String.format("%.2f", msystem.streams.cods()[2].parcj));	
+	}	
+
+	public void initwaterdesign() {	
+		textFieldpariQp.setText(String.format("%.2f", msystem.pariQp));	
+		textFieldpariY.setText(String.format("%.2f", msystem.pariY));	
+		textFieldpariQr.setText(String.format("%.2f", msystem.pariQr));	
+		TextFieldpariQf.setText(String.format("%.2f", msystem.pariQf()));	
+		TextFieldpariQc.setText(String.format("%.2f", msystem.pariQc()));	
+		try {	
+			TextFieldpariJ.setText(String.format("%.2f", msystem.pariJ()));// 平均水通量	
+			TextFieldpariYD.setText(String.format("%.2f", msystem.pariYD()));// DF膜回收率	
+		} catch (Exception e1) {	
+			JOptionPane.showMessageDialog(getContentPane(), e1.getMessage(), "错误！", JOptionPane.ERROR_MESSAGE);	
+		}	
+	}	
+
+	public void inittablessystem() {	
+		for (int i = 0; i < tablesystem.getColumnCount() - 1; i++) {	
+			tablesystem.setValueAt(msystem.sections()[i].model, 1, (i + 1));	
+			tablesystem.setValueAt(msystem.sections()[i].parEi, 2, (i + 1));	
+			tablesystem.setValueAt(msystem.sections()[i].parNVi, 3, (i + 1));	
+			tablesystem.setValueAt(df2.format(msystem.sections()[i].parPpi) + " " + lblMpa_2.getText(), 4, (i + 1));	
+			tablesystem.setValueAt(df2.format(msystem.sections()[i].parDpi) + " " + lblMpa_MPa0.getText(), 5, (i + 1));	
+			tablesystem.setValueAt(df2.format(msystem.sections()[i].parPLi) + " " + lblMpa_MPa2.getText(), 6, (i + 1));	
+			tablesystem.setValueAt(i + 1 + "段", 0, i + 1);	
+		}	
+		for (int m = 0; m < tablesystem.getColumnCount(); m++) {	
+			tablesystem.getColumnModel().getColumn(m).setPreferredWidth(100);	
+		}	
+	}	
+
+	
+	
 	public void textfieldparcj(JTextField jtf,int i) {
 		try {
 			if (Double.parseDouble(jtf.getText()) < 0) {
