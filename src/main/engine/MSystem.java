@@ -110,7 +110,7 @@ public class MSystem {
 		return this.pumps.toArray(new MPump[0]);
 	}
 	public double parη(int i){
-		return 3.59*this.pumps()[i].parη_PJ*this.pumps()[i].parη_MJ*this.pumps()[i].parη_VFD;
+		return 3.67*this.pumps()[i].parη_PJ*this.pumps()[i].parη_MJ*this.pumps()[i].parη_VFD;
 	}
 	
 	//系统吨水电耗，kWh/d
